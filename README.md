@@ -1,9 +1,8 @@
 
-<!DOCTYPE html>
 <html>
     <body>
         <h1>
-<b>katie sucks butt</b>
+<b>katie sucks but</b>
         </h1>
     </body>
 </html>
