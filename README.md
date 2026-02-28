@@ -2,7 +2,7 @@
 <html>
     <body>
         <h1>
-<b>katie sucks butt</b>
+<b>What is aiden thinking about?</b>
         </h1>
     </body>
 </html>
@@ -10,5 +10,5 @@
 <input type="text" name="username">
 <button type="submit">submit</button>
 <h2>
-    6,7
+    Text me at no one give a shit 
 </h2>
