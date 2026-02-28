@@ -2,13 +2,13 @@
 <html>
     <body>
         <h1>
-<b>katie sucks but</b>
+<b>what is aiden thinking about?</b>
         </h1>
     </body>
 </html>
 <a href="https://chatgpt.com/">guess what</a>
-<input type="text" name="username">
+<input type="idk what goes here" name="Number">
 <button type="submit">submit</button>
 <h2>
-    6,7
+ aiden sucks!
 </h2>
