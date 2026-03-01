@@ -6,10 +6,28 @@
 </html>
 <a href="https://chatgpt.com/">guess what</a>
 <input type="text" name="username">
-<button type="submit">submit</button>
    <h2>
        Jaxon, Andrew
    </h2> 
+<!DOCTYPE html>
+<html>
+<body>
+<input type="text" id="answer" placeholder="Type your answer">
+<button onclick="submitAnswer()">Submit</button>
+
+<p id="result"></p>
+
+<script>
+function submitAnswer() {
+    let answer = document.getElementById("answer").value;
+    document.getElementById("result").innerHTML = "You submitted: " + answer;
+}
+</script>
+
+</body>
+</html>
+
+
 
 
 
