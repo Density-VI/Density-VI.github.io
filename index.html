@@ -11,39 +11,35 @@
             margin: 0;
             padding: 0;
         }
-
-        .room {
-            padding: 40px;
-        }
-
-        a {
-            color: cyan;
-            cursor: pointer;
-        }
-
-        input {
-            padding: 8px;
-            margin: 10px;
-        }
-
+        .room { padding: 40px; }
+        a { color: cyan; cursor: pointer; }
+        input { padding: 8px; margin: 10px; }
         #passedScreen {
             display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: black;
-            color: lime;
-            font-size: 80px;
-            font-weight: bold;
-            justify-content: center;
-            align-items: center;
+            top:0; left:0;
+            width:100%; height:100%;
+            background-color:black;
+            color:lime;
+            font-size:80px;
+            font-weight:bold;
+            justify-content:center;
+            align-items:center;
         }
+        .hidden { display:none; }
 
-        .hidden {
-            display: none;
+        #gameContainer {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            margin: 20px auto;
+            background-color: #222;
+            border: 3px solid #fff;
+            overflow: hidden;
         }
+        #player { position:absolute; width:40px; height:40px; background-color:red; }
+        .platform { position:absolute; height:20px; background-color:#888; }
+        #greenTrap { position:absolute; width:50px; height:50px; background-color:green; }
     </style>
 </head>
 <body>
@@ -51,51 +47,154 @@
 <div id="room1" class="room">
     <h1>Escape Room - Room 1</h1>
     <p>There are many things you can click...</p>
-
-    <p><a onclick="alert('Just a distraction!')">Mysterious Link</a></p>
-
+ <a href="https://www.bing.com/videos/riverview/relatedvideo?q=rick+aslty+never&&mid=4E7B1C0F8E67E9F7B1364E7B1C0F8E67E9F7B136&churl=https%3a%2f%2fwww.youtube.com%2fchannel%2fUCuAXFkgsw1L7xaCfnd5JJOw&FORM=VAMGZC">Click Me I Dare You</a>
     <p>Enter the secret code:</p>
     <input type="text" placeholder="Type something...">
-
     <p><button onclick="alert('Nothing happens... or does it?')">Strange Button</button></p>
 </div>
 
-<div id="passedScreen">
-    YOU PASSED
-</div>
+<div id="passedScreen">YOU PASSED</div>
 
 <div id="room2" class="room hidden">
-    <h1>Room 2</h1>
-    <p>Welcome to the next challenge...</p>
+    <h1>Escape Room - Room 2: Platformer</h1>
+    <p>Fall 5 times to continue! Avoid the green trap block!</p>
+    <p>Deaths: <span id="deathCount">0</span>/5</p>
+    <div id="gameContainer">
+        <div id="player"></div>
+
+        <!-- Platforms for a fun path -->
+        <div class="platform" style="top:350px; left:0px; width:200px;"></div>
+        <div class="platform" style="top:300px; left:220px; width:150px;"></div>
+        <div class="platform" style="top:250px; left:400px; width:150px;"></div>
+        <div class="platform" style="top:200px; left:600px; width:150px;"></div>
+        <div class="platform" style="top:150px; left:200px; width:150px;"></div>
+        <div class="platform" style="top:100px; left:400px; width:150px;"></div>
+        <div class="platform" style="top:50px; left:600px; width:150px;"></div>
+
+        <!-- Green trap -->
+        <div id="greenTrap" style="top:10px; left:750px;"></div>
+    </div>
 </div>
 
 <script>
-    let timeout;
+let timeout;
 
-    function resetTimer() {
-        clearTimeout(timeout);
-        timeout = setTimeout(goToNextRoom, 30000); // 30 seconds
+function resetTimer() {
+    clearTimeout(timeout);
+    timeout = setTimeout(goToRoom2, 30000);
+}
+
+function goToRoom2() {
+    document.getElementById("passedScreen").style.display="flex";
+    setTimeout(()=>{
+        document.getElementById("passedScreen").style.display="none";
+        document.getElementById("room1").classList.add("hidden");
+        document.getElementById("room2").classList.remove("hidden");
+        startPlatformer();
+    },3000);
+}
+
+document.addEventListener("mousemove", resetTimer);
+document.addEventListener("keypress", resetTimer);
+document.addEventListener("click", resetTimer);
+resetTimer();
+
+function startPlatformer(){
+    const player = document.getElementById("player");
+    const platforms = document.querySelectorAll(".platform");
+    const greenTrap = document.getElementById("greenTrap");
+    const deathDisplay = document.getElementById("deathCount");
+
+    let left = 0;
+    let bottom = 350; // start on first visible platform
+    let velocityY = 0;
+    const gravity = -0.5;
+    const moveSpeed = 5;
+    let keys = {};
+    let deaths = 0;
+    const maxDeaths = 5;
+    let room3Loaded=false;
+    let greenTrapActive=true;
+
+    player.style.left = left + "px";
+    player.style.bottom = bottom + "px";
+
+    document.addEventListener("keydown", e=>keys[e.key]=true);
+    document.addEventListener("keyup", e=>keys[e.key]=false);
+
+    function resetPlayer(){
+        if(room3Loaded) return;
+        left=0; bottom=350; velocityY=0;
+        deaths++; deathDisplay.textContent=deaths;
+        if(deaths>=maxDeaths && !room3Loaded){
+            room3Loaded=true;
+            loadRoom3();
+        }
     }
 
-    function goToNextRoom() {
-        document.getElementById("passedScreen").style.display = "flex";
-        
-        setTimeout(function() {
-            document.getElementById("passedScreen").style.display = "none";
-            document.getElementById("room1").classList.add("hidden");
-            document.getElementById("room2").classList.remove("hidden");
-        }, 3000);
+    function backToRoom1(){
+        if(!greenTrapActive) return;
+        greenTrapActive=false;
+        document.getElementById("room2").classList.add("hidden");
+        document.getElementById("room1").classList.remove("hidden");
+        resetTimer();
     }
 
-    // Detect user activity
-    document.addEventListener("mousemove", resetTimer);
-    document.addEventListener("keypress", resetTimer);
-    document.addEventListener("click", resetTimer);
+    function rectsOverlap(r1,r2){
+        return !(r2.left>r1.right || r2.right<r1.left || r2.top>r1.bottom || r2.bottom<r1.top);
+    }
 
-    // Start timer on page load
-    resetTimer();
+    function gameLoop(){
+        if(room3Loaded) return;
+
+        if(keys["ArrowLeft"]) left-=moveSpeed;
+        if(keys["ArrowRight"]) left+=moveSpeed;
+
+        velocityY+=gravity;
+        bottom+=velocityY;
+
+        if(bottom<-50) resetPlayer();
+
+        // platform collision
+        platforms.forEach(p=>{
+            const pTop=p.offsetTop;
+            const pLeft=p.offsetLeft;
+            const pRight=pLeft+p.offsetWidth;
+            const pHeight=p.offsetHeight;
+
+            if(left+40>pLeft && left<pRight &&
+               bottom<=pTop+pHeight && bottom+40>=pTop &&
+               velocityY<=0){
+                bottom = pTop + pHeight; // land on top of platform
+                velocityY=0;
+            }
+        });
+
+        if(keys["ArrowUp"] && velocityY===0) velocityY=10;
+
+        player.style.left = left + "px";
+        player.style.bottom = bottom + "px";
+
+        if(rectsOverlap(player.getBoundingClientRect(), greenTrap.getBoundingClientRect())){
+            backToRoom1();
+        }
+
+        requestAnimationFrame(gameLoop);
+    }
+
+    gameLoop();
+
+    function loadRoom3(){
+        greenTrapActive=false;
+        document.getElementById("room2").classList.add("hidden");
+        const room3=document.createElement("div");
+        room3.id="room3";
+        room3.className="room";
+        room3.innerHTML="<h1>Room 3</h1><p>Congrats! You escaped Room 2.</p>";
+        document.body.appendChild(room3);
+    }
+}
 </script>
-
 </body>
 </html>
 
