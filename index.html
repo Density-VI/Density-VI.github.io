@@ -3,6 +3,8 @@
 <head>
 <title>Escape Room</title>
 
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+
 <style>
 body {
     font-family: Arial, sans-serif;
@@ -10,6 +12,7 @@ body {
     color: white;
     text-align: center;
     margin: 0;
+    padding: 0;
 }
 .room { padding: 40px; }
 .hidden { display:none; }
@@ -20,7 +23,7 @@ input, button { padding:10px; margin:10px; }
     position: fixed;
     top:0; left:0;
     width:100%; height:100%;
-    background:black;
+    background-color:black;
     color:lime;
     font-size:70px;
     font-weight:bold;
@@ -33,17 +36,19 @@ input, button { padding:10px; margin:10px; }
     color:cyan;
 }
 
+/* Leaderboard Styles */
 table {
-    margin:20px auto;
+    margin: 20px auto;
     border-collapse: collapse;
-    width:60%;
+    width: 50%;
+    color: white;
 }
 th, td {
-    border:1px solid white;
-    padding:10px;
+    padding: 10px;
+    border: 1px solid #fff;
 }
 th {
-    background:#333;
+    background-color: #333;
 }
 </style>
 </head>
@@ -88,17 +93,18 @@ th {
 <div id="finishPage" class="room hidden">
     <h1>YOU ESCAPED</h1>
     <h2 id="finalTime"></h2>
-    <button onclick="saveScore()">Save Score</button>
+    <button onclick="submitScore()">Submit Score</button>
+    <p id="submitStatus"></p>
 </div>
 
 <!-- LEADERBOARD PAGE -->
 <div id="leaderboardPage" class="room hidden">
-    <h1>🏆 Leaderboard (Top 10)</h1>
+    <h1>🏆 Global Leaderboard</h1>
     <table id="leaderboardTable">
         <tr>
             <th>Rank</th>
             <th>Email</th>
-            <th>Time (s)</th>
+            <th>Score</th>
         </tr>
     </table>
     <br>
@@ -106,126 +112,140 @@ th {
 </div>
 
 <script>
-let playerEmail="";
+// Global variables
+let playerEmail = "";
 let startTime;
 let timerInterval;
 let inactivityTimer;
 
-/* ---------- START ---------- */
+// Leaderboard storage in localStorage
+const LEADERBOARD_KEY = "escapeRoomLeaderboard";
 
-function beginGame(){
-    const emailInput=document.getElementById("loginEmail").value;
-    if(!emailInput){
+// Helper function to get leaderboard from localStorage
+function getLeaderboard() {
+    const leaderboard = localStorage.getItem(LEADERBOARD_KEY);
+    return leaderboard ? JSON.parse(leaderboard) : [];
+}
+
+// Helper function to save leaderboard to localStorage
+function saveLeaderboard(leaderboard) {
+    localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
+}
+
+// Start the game
+function beginGame() {
+    const emailInput = document.getElementById("loginEmail").value;
+    if (!emailInput) {
         alert("Enter your email first.");
         return;
     }
 
-    playerEmail=emailInput;
+    playerEmail = emailInput;
 
     document.getElementById("startPage").classList.add("hidden");
     document.getElementById("room1").classList.remove("hidden");
     document.getElementById("timerDisplay").classList.remove("hidden");
 
-    startTime=Date.now();
-    timerInterval=setInterval(updateTimer,10);
+    startTime = Date.now();
+    timerInterval = setInterval(updateTimer, 10);
 
     resetIdleTimer();
 }
 
-/* ---------- TIMER ---------- */
-
-function updateTimer(){
-    let elapsed=(Date.now()-startTime)/1000;
-    document.getElementById("timerDisplay").innerText=
-        "Time: "+elapsed.toFixed(2)+"s";
+// Update timer display
+function updateTimer() {
+    let elapsed = (Date.now() - startTime) / 1000;
+    document.getElementById("timerDisplay").innerText = "Time: " + elapsed.toFixed(2) + "s";
 }
 
-function stopTimer(){
+// Stop the timer and return final time
+function stopTimer() {
     clearInterval(timerInterval);
-    return ((Date.now()-startTime)/1000).toFixed(2);
+    return ((Date.now() - startTime) / 1000).toFixed(2);
 }
 
-/* ---------- ROOM 1 WIN ---------- */
-
-function resetIdleTimer(){
+// Reset idle timer (30 seconds of inactivity)
+function resetIdleTimer() {
     clearTimeout(inactivityTimer);
-    inactivityTimer=setTimeout(winGame,30000);
+    inactivityTimer = setTimeout(winGame, 30000);
 }
 
-document.addEventListener("mousemove",resetIdleTimer);
-document.addEventListener("keypress",resetIdleTimer);
-document.addEventListener("click",resetIdleTimer);
+document.addEventListener("mousemove", resetIdleTimer);
+document.addEventListener("keypress", resetIdleTimer);
+document.addEventListener("click", resetIdleTimer);
 
-function winGame(){
-    document.getElementById("passedScreen").style.display="flex";
-
-    setTimeout(()=>{
-        document.getElementById("passedScreen").style.display="none";
+// Win game (after 30 seconds of inactivity or completing the game)
+function winGame() {
+    document.getElementById("passedScreen").style.display = "flex";
+    setTimeout(() => {
+        document.getElementById("passedScreen").style.display = "none";
         document.getElementById("room1").classList.add("hidden");
         document.getElementById("finishPage").classList.remove("hidden");
 
-        let finalTime=stopTimer();
-        window.playerScore=finalTime;
-
-        document.getElementById("finalTime").innerText=
-            "Your Time: "+finalTime+" seconds";
-    },3000);
+        let finalTime = stopTimer();
+        window.playerScore = finalTime;
+        document.getElementById("finalTime").innerText = "Your Time: " + finalTime + " seconds";
+    }, 3000);
 }
 
-/* ---------- LEADERBOARD ---------- */
+// Submit score to the leaderboard
+function submitScore() {
+    let leaderboard = getLeaderboard();
 
-function saveScore(){
-    let scores=JSON.parse(localStorage.getItem("escapeScores")) || [];
-
-    scores.push({
-        email:playerEmail,
-        time:parseFloat(window.playerScore)
+    // Add player's score to the leaderboard
+    leaderboard.push({
+        email: playerEmail,
+        score: window.playerScore
     });
 
-    scores.sort((a,b)=>a.time-b.time);
-    scores=scores.slice(0,10);
+    // Sort leaderboard by score (ascending order)
+    leaderboard.sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
 
-    localStorage.setItem("escapeScores",JSON.stringify(scores));
+    // Limit to top 10 scores
+    if (leaderboard.length > 10) {
+        leaderboard = leaderboard.slice(0, 10);
+    }
 
-    showLeaderboard();
+    // Save leaderboard back to localStorage
+    saveLeaderboard(leaderboard);
+
+    // Show success message
+    document.getElementById("submitStatus").innerText = "Score Submitted Successfully!";
 }
 
-function showLeaderboard(){
-    document.querySelectorAll(".room").forEach(r=>r.classList.add("hidden"));
+// Show the leaderboard
+function showLeaderboard() {
+    document.querySelectorAll(".room").forEach(r => r.classList.add("hidden"));
     document.getElementById("leaderboardPage").classList.remove("hidden");
 
-    const table=document.getElementById("leaderboardTable");
+    // Get leaderboard and display it
+    const leaderboard = getLeaderboard();
+    const table = document.getElementById("leaderboardTable");
 
-    table.innerHTML=`
+    // Clear existing leaderboard
+    table.innerHTML = `
         <tr>
             <th>Rank</th>
             <th>Email</th>
-            <th>Time (s)</th>
+            <th>Score</th>
         </tr>
     `;
 
-    let scores=JSON.parse(localStorage.getItem("escapeScores")) || [];
-
-    scores.forEach((score,index)=>{
-        table.innerHTML+=`
-            <tr>
-                <td>${index+1}</td>
-                <td>${score.email}</td>
-                <td>${score.time.toFixed(2)}</td>
-            </tr>
-        `;
+    // Populate leaderboard table
+    leaderboard.forEach((entry, index) => {
+        let row = table.insertRow();
+        row.insertCell(0).textContent = index + 1;
+        row.insertCell(1).textContent = entry.email;
+        row.insertCell(2).textContent = entry.score;
     });
 }
 
-function goHome(){
-    document.querySelectorAll(".room").forEach(r=>r.classList.add("hidden"));
-    document.getElementById("startPage").classList.remove("hidden");
+// Go back to home (reload the game)
+function goHome() {
+    location.reload();
 }
 </script>
 
 </body>
 </html>
-
-
-
 
