@@ -115,7 +115,9 @@ th {
 
         if (userInput === correctAnswer) {
             document.getElementById("message").innerHTML = "Access Granted!";
-            window.location.href = "nextpage.html"; // Redirects if correct
+            <div id="finishPage" class="hidden">
+    <h1>YOU ESCAPED</h1>
+</div>
         } else {
             document.getElementById("message").innerHTML = "Wrong answer. Try again!";
         }
@@ -274,3 +276,4 @@ function goHome() {
 
 </body>
 </html>
+
