@@ -59,7 +59,7 @@ th {
 <div id="startPage" class="room">
     <h1>Escape Room Challenge</h1>
     <p>Enter your username to begin:</p>
-    <input type="email" id="loginEmail" placeholder="Your username">
+    <input type="Username" id="loginEmail" placeholder="Your username">
     <br>
     <button onclick="beginGame()">START GAME</button>
     <br><br>
@@ -136,7 +136,7 @@ function saveLeaderboard(leaderboard) {
 function beginGame() {
     const emailInput = document.getElementById("loginEmail").value;
     if (!emailInput) {
-        alert("Enter your email first.");
+        alert("Please choose a username.");
         return;
     }
 
@@ -248,6 +248,7 @@ function goHome() {
 
 </body>
 </html>
+
 
 
 
