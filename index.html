@@ -21,8 +21,10 @@ input, button { padding:10px; margin:10px; }
 #passedScreen {
     display:none;
     position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
     background-color:black;
     color:lime;
     font-size:70px;
@@ -74,31 +76,25 @@ th {
     <p>There are many things you can click...</p>
 
     <a href="https://www.youtube.com/watch?v=Dwnui-3-o-4b" target="_blank">
-       /If u are bored click this/
+        If u are bored click this
     </a>
-    
-  <a href="https://www.youtube.com/watch?v=UG9BG7oEk7s" target="_blank">
-       /This is a self advertisement/
-  </a>
+
+    <a href="https://www.youtube.com/watch?v=UG9BG7oEk7s" target="_blank">
+        This is a self advertisement
+    </a>
+
     <p>Enter the secret code:</p>
     <input type="text" placeholder="Type something...">
 
     <p>
-    <button onclick="alert('if the answer is what you seek you must mute and find peace')">
-        If you click this button isaac will give you a kiss 
-    </button>
+        <button onclick="alert('if the answer is what you seek you must mute and find peace')">
+            If you click this button isaac will give you a kiss
+        </button>
     </p>
 </div>
-      
-    
 
 <div id="passedScreen">YOU PASSED</div>
 
-    <!-- ROOM 2 -->
-<div id="room2" class="room hidden">
-    <h1>Escape Room - Room 2</h1>
-      <p>Whats the code?</p>
-    
 <!-- FINISH PAGE -->
 <div id="finishPage" class="room hidden">
     <h1>YOU ESCAPED</h1>
@@ -106,10 +102,6 @@ th {
     <button onclick="submitScore()">Submit Score</button>
     <p id="submitStatus"></p>
 </div>
-
-    <a href="https://www.bing.com/ck/a?!&&p=d76f37d3e1251770ccebfd1f113d8ebb9f117889b1907761d18ee5e05f604a2dJmltdHM9MTc3MjMyMzIwMA&ptn=3&ver=2&hsh=4&fclid=054de15f-fde7-615e-06d2-f02ffc5d604a&u=a1L3ZpZGVvcy9yaXZlcnZpZXcvcmVsYXRlZHZpZGVvP3E9Ym9tYit0aW1lcis1K3NlY29uZHMmJm1pZD01QTk1QzYwMEZENDVGNzNCNkNCRjVBOTVDNjAwRkQ0NUY3M0I2Q0JGJmNodXJsPWh0dHBzJTNhJTJmJTJmd3d3LnlvdXR1YmUuY29tJTJmY2hhbm5lbCUyZlVDUEhtazdENGd3OUduazJlUkY2c3dGdyZGT1JNPVZBTUdaQw" target="_blank">
-       self destruct
-    </a>
 
 <!-- LEADERBOARD PAGE -->
 <div id="leaderboardPage" class="room hidden">
@@ -169,7 +161,8 @@ function beginGame() {
 // Update timer display
 function updateTimer() {
     let elapsed = (Date.now() - startTime) / 1000;
-    document.getElementById("timerDisplay").innerText = "Time: " + elapsed.toFixed(2) + "s";
+    document.getElementById("timerDisplay").innerText =
+        "Time: " + elapsed.toFixed(2) + "s";
 }
 
 // Stop the timer and return final time
@@ -188,56 +181,56 @@ document.addEventListener("mousemove", resetIdleTimer);
 document.addEventListener("keypress", resetIdleTimer);
 document.addEventListener("click", resetIdleTimer);
 
-// Win game (after 30 seconds of inactivity or completing the game)
+// Win game
 function winGame() {
     document.getElementById("passedScreen").style.display = "flex";
+
     setTimeout(() => {
-        document.getElementById("room2").classList.remove("hidden");
         document.getElementById("passedScreen").style.display = "none";
         document.getElementById("room1").classList.add("hidden");
         document.getElementById("finishPage").classList.remove("hidden");
-        
+
         let finalTime = stopTimer();
         window.playerScore = finalTime;
-        document.getElementById("finalTime").innerText = "Your Time: " + finalTime + " seconds";
+        document.getElementById("finalTime").innerText =
+            "Your Time: " + finalTime + " seconds";
     }, 3000);
 }
 
-// Submit score to the leaderboard
+// Submit score
 function submitScore() {
     let leaderboard = getLeaderboard();
 
-    // Add player's score to the leaderboard
     leaderboard.push({
         email: playerEmail,
         score: window.playerScore
     });
 
-    // Sort leaderboard by score (ascending order)
-    leaderboard.sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
+    leaderboard.sort((a, b) =>
+        parseFloat(a.score) - parseFloat(b.score)
+    );
 
-    // Limit to top 10 scores
     if (leaderboard.length > 10) {
         leaderboard = leaderboard.slice(0, 10);
     }
 
-    // Save leaderboard back to localStorage
     saveLeaderboard(leaderboard);
 
-    // Show success message
-    document.getElementById("submitStatus").innerText = "Score Submitted Successfully!";
+    document.getElementById("submitStatus").innerText =
+        "Score Submitted Successfully!";
 }
 
-// Show the leaderboard
+// Show leaderboard
 function showLeaderboard() {
-    document.querySelectorAll(".room").forEach(r => r.classList.add("hidden"));
-    document.getElementById("leaderboardPage").classList.remove("hidden");
+    document.querySelectorAll(".room")
+        .forEach(r => r.classList.add("hidden"));
 
-    // Get leaderboard and display it
+    document.getElementById("leaderboardPage")
+        .classList.remove("hidden");
+
     const leaderboard = getLeaderboard();
     const table = document.getElementById("leaderboardTable");
 
-    // Clear existing leaderboard
     table.innerHTML = `
         <tr>
             <th>Rank</th>
@@ -246,7 +239,6 @@ function showLeaderboard() {
         </tr>
     `;
 
-    // Populate leaderboard table
     leaderboard.forEach((entry, index) => {
         let row = table.insertRow();
         row.insertCell(0).textContent = index + 1;
@@ -255,7 +247,7 @@ function showLeaderboard() {
     });
 }
 
-// Go back to home (reload the game)
+// Go back to home
 function goHome() {
     location.reload();
 }
@@ -263,22 +255,3 @@ function goHome() {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
