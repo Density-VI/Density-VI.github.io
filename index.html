@@ -94,10 +94,11 @@ th {
 
 <div id="passedScreen">YOU PASSED</div>
 
-    <!-- ROOM 1 -->
-<div id="room1" class="room hidden">
-    <h1>Escape Room - Room 1</h1>
+    <!-- ROOM 2 -->
+<div id="room2" class="room hidden">
+    <h1>Escape Room - Room 2</h1>
       <p>There are many things you can click...</p>
+    
 <!-- FINISH PAGE -->
 <div id="finishPage" class="room hidden">
     <h1>YOU ESCAPED</h1>
@@ -191,10 +192,11 @@ document.addEventListener("click", resetIdleTimer);
 function winGame() {
     document.getElementById("passedScreen").style.display = "flex";
     setTimeout(() => {
+        document.getElementById("room2").classList.remove("hidden");
         document.getElementById("passedScreen").style.display = "none";
         document.getElementById("room1").classList.add("hidden");
         document.getElementById("finishPage").classList.remove("hidden");
-
+        
         let finalTime = stopTimer();
         window.playerScore = finalTime;
         document.getElementById("finalTime").innerText = "Your Time: " + finalTime + " seconds";
@@ -261,6 +263,7 @@ function goHome() {
 
 </body>
 </html>
+
 
 
 
