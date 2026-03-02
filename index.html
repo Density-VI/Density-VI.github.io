@@ -115,7 +115,7 @@ th {
 
         if (userInput === correctAnswer) {
             document.getElementById("message").innerHTML = "Access Granted!";
-            window.location.href = "finishPage"; // Redirects if correct
+            window.location.href = "nextpage.html"; // Redirects if correct
         } else {
             document.getElementById("message").innerHTML = "Wrong answer. Try again!";
         }
@@ -204,6 +204,17 @@ function resetIdleTimerRoom1() {
     inactivityTimer = setTimeout(winGame, 30000);  // Finish Room 1 after 30 seconds
 }
 
+// Reset inactivity timer on interaction (mouse move, key press, or click)
+function resetActivityTimer() {
+    clearTimeout(inactivityTimer);
+    inactivityTimer = setTimeout(winGame, 30000);  // Room 1 inactivity timeout
+}
+
+// Event listeners to reset inactivity timer on any user interaction
+document.addEventListener("mousemove", resetActivityTimer);
+document.addEventListener("keypress", resetActivityTimer);
+document.addEventListener("click", resetActivityTimer);
+
 // Win game and go to Room 2
 function winGame() {
     document.getElementById("passedScreen").style.display = "flex";
@@ -274,5 +285,3 @@ function goHome() {
 
 </body>
 </html>
-
-
