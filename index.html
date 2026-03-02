@@ -94,9 +94,8 @@ th {
 </div>
 
 <div id="passedScreen">YOU PASSED</div>
-    <div id="passedScreen">Next level!</div>
 
-        <!-- ROOM 2 -->
+<!-- ROOM 2 -->
 <div id="room2" class="room hidden">
     <h1>Escape Room - Room 2</h1>
     <p>Whats the code?</p>
@@ -107,20 +106,7 @@ th {
     <button onclick="checkAnswer()">Submit</button>
 
     <p id="message"></p>
-
-    <script>
-    function checkAnswer() {
-        var userInput = document.getElementById("answerBox").value;
-        var correctAnswer = "password";
-
-        if (userInput === correctAnswer) {
-            document.getElementById("message").innerHTML = "Access Granted!";
-            window.location.href = "nextpage.html"; // Redirects if correct
-        } else {
-            document.getElementById("message").innerHTML = "Wrong answer. Try again!";
-        }
-    }
-    </script>
+</div>
 
 <!-- FINISH PAGE -->
 <div id="finishPage" class="room hidden">
@@ -132,7 +118,7 @@ th {
 
 <!-- LEADERBOARD PAGE -->
 <div id="leaderboardPage" class="room hidden">
-    <h1>🏆 Your Best Times </h1>
+    <h1>🏆 Global Leaderboard</h1>
     <table id="leaderboardTable">
         <tr>
             <th>Rank</th>
@@ -142,6 +128,7 @@ th {
     </table>
     <br>
     <button onclick="goHome()">Back</button>
+    <button onclick="resetLeaderboard()">Reset Leaderboard</button>
 </div>
 
 <script>
@@ -151,21 +138,21 @@ let startTime;
 let timerInterval;
 let inactivityTimer;
 
-// Leaderboard storage in localStorage
+// Leaderboard storage
 const LEADERBOARD_KEY = "escapeRoomLeaderboard";
 
-// Helper function to get leaderboard from localStorage
+// Get leaderboard
 function getLeaderboard() {
     const leaderboard = localStorage.getItem(LEADERBOARD_KEY);
     return leaderboard ? JSON.parse(leaderboard) : [];
 }
 
-// Helper function to save leaderboard to localStorage
+// Save leaderboard
 function saveLeaderboard(leaderboard) {
     localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
 }
 
-// Start the game
+// Start game
 function beginGame() {
     const emailInput = document.getElementById("loginEmail").value;
     if (!emailInput) {
@@ -182,40 +169,40 @@ function beginGame() {
     startTime = Date.now();
     timerInterval = setInterval(updateTimer, 10);
 
-    resetIdleTimerRoom1(); // Start inactivity timer for Room 1
+    resetIdleTimerRoom1();
 }
 
-// Update timer display
+// Update timer
 function updateTimer() {
     let elapsed = (Date.now() - startTime) / 1000;
     document.getElementById("timerDisplay").innerText =
         "Time: " + elapsed.toFixed(2) + "s";
 }
 
-// Stop the timer and return final time
+// Stop timer
 function stopTimer() {
     clearInterval(timerInterval);
     return ((Date.now() - startTime) / 1000).toFixed(2);
 }
 
-// Reset idle timer (30 seconds of inactivity) for Room 1
+// 30 second inactivity for Room 1 only
 function resetIdleTimerRoom1() {
     clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(winGame, 30000);  // Finish Room 1 after 30 seconds
+    inactivityTimer = setTimeout(winGame, 30000);
 }
 
-// Reset inactivity timer on interaction (mouse move, key press, or click)
+// Reset inactivity on interaction
 function resetActivityTimer() {
-    clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(winGame, 30000);  // Room 1 inactivity timeout
+    if (!document.getElementById("room1").classList.contains("hidden")) {
+        resetIdleTimerRoom1();
+    }
 }
 
-// Event listeners to reset inactivity timer on any user interaction
 document.addEventListener("mousemove", resetActivityTimer);
 document.addEventListener("keypress", resetActivityTimer);
 document.addEventListener("click", resetActivityTimer);
 
-// Win game and go to Room 2
+// Move to Room 2
 function winGame() {
     document.getElementById("passedScreen").style.display = "flex";
 
@@ -223,8 +210,26 @@ function winGame() {
         document.getElementById("room2").classList.remove("hidden");
         document.getElementById("passedScreen").style.display = "none";
         document.getElementById("room1").classList.add("hidden");
-        // Timer continues running in Room 2, no inactivity timeout here
+        clearTimeout(inactivityTimer); // stop inactivity timer
     }, 3000);
+}
+
+// Check Room 2 answer
+function checkAnswer() {
+    var userInput = document.getElementById("answerBox").value;
+    var correctAnswer = "password";
+
+    if (userInput === correctAnswer) {
+        let finalTime = stopTimer();
+        window.playerScore = finalTime;
+
+        document.getElementById("room2").classList.add("hidden");
+        document.getElementById("finishPage").classList.remove("hidden");
+        document.getElementById("finalTime").innerText =
+            "Your Time: " + finalTime + " seconds";
+    } else {
+        document.getElementById("message").innerHTML = "Wrong answer. Try again!";
+    }
 }
 
 // Submit score
@@ -277,7 +282,20 @@ function showLeaderboard() {
     });
 }
 
-// Go back to home
+// 🔐 Reset leaderboard with secret code
+function resetLeaderboard() {
+    let code = prompt("Enter reset code:");
+
+    if (code === "937362") {
+        localStorage.removeItem(LEADERBOARD_KEY);
+        alert("Leaderboard has been reset.");
+        showLeaderboard();
+    } else {
+        alert("Incorrect code.");
+    }
+}
+
+// Go home
 function goHome() {
     location.reload();
 }
@@ -285,4 +303,3 @@ function goHome() {
 
 </body>
 </html>
-
