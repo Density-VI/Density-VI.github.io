@@ -101,6 +101,33 @@ th {
     <h1>Escape Room - Room 2</h1>
       <p>Whats the code?</p>
 
+    
+<title>Text Check</title>
+</head>
+<body>
+
+<h2>Type the secret word to continue:</h2>
+
+<input type="text" id="answerBox" placeholder="Enter password">
+<button onclick="checkAnswer()">Submit</button>
+
+<p id="message"></p>
+
+<script>
+function checkAnswer() {
+var userInput = document.getElementById("answerBox").value;
+var correctAnswer = "password";
+
+if (userInput === correctAnswer) {
+document.getElementById("message").innerHTML = "Access Granted!";
+window.location.href = "nextpage.html"; // Redirects if correct
+} else {
+document.getElementById("message").innerHTML = "Wrong answer. Try again!";
+}
+}
+</script>
+
+
 <!-- FINISH PAGE -->
 <div id="finishPage" class="room hidden">
     <h1>YOU ESCAPED</h1>
@@ -261,6 +288,7 @@ function goHome() {
 
 </body>
 </html>
+
 
 
 
