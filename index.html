@@ -186,6 +186,7 @@ function winGame() {
     document.getElementById("passedScreen").style.display = "flex";
 
     setTimeout(() => {
+        document.getElementById("room2").classList.remove("hidden");
         document.getElementById("passedScreen").style.display = "none";
         document.getElementById("room1").classList.add("hidden");
         document.getElementById("finishPage").classList.remove("hidden");
@@ -255,3 +256,4 @@ function goHome() {
 
 </body>
 </html>
+
