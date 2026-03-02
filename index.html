@@ -99,34 +99,28 @@ th {
         <!-- ROOM 2 -->
 <div id="room2" class="room hidden">
     <h1>Escape Room - Room 2</h1>
-      <p>Whats the code?</p>
+    <p>Whats the code?</p>
 
-    
-<title>Text Check</title>
-</head>
-<body>
+    <h2>Type the secret word to continue:</h2>
 
-<h2>Type the secret word to continue:</h2>
+    <input type="text" id="answerBox" placeholder="Enter password">
+    <button onclick="checkAnswer()">Submit</button>
 
-<input type="text" id="answerBox" placeholder="Enter password">
-<button onclick="checkAnswer()">Submit</button>
+    <p id="message"></p>
 
-<p id="message"></p>
+    <script>
+    function checkAnswer() {
+        var userInput = document.getElementById("answerBox").value;
+        var correctAnswer = "password";
 
-<script>
-function checkAnswer() {
-var userInput = document.getElementById("answerBox").value;
-var correctAnswer = "password";
-
-if (userInput === correctAnswer) {
-document.getElementById("message").innerHTML = "Access Granted!";
-window.location.href = "nextpage.html"; // Redirects if correct
-} else {
-document.getElementById("message").innerHTML = "Wrong answer. Try again!";
-}
-}
-</script>
-
+        if (userInput === correctAnswer) {
+            document.getElementById("message").innerHTML = "Access Granted!";
+            window.location.href = "nextpage.html"; // Redirects if correct
+        } else {
+            document.getElementById("message").innerHTML = "Wrong answer. Try again!";
+        }
+    }
+    </script>
 
 <!-- FINISH PAGE -->
 <div id="finishPage" class="room hidden">
@@ -188,7 +182,7 @@ function beginGame() {
     startTime = Date.now();
     timerInterval = setInterval(updateTimer, 10);
 
-    resetIdleTimer();
+    resetIdleTimerRoom1(); // Start inactivity timer for Room 1
 }
 
 // Update timer display
@@ -204,17 +198,13 @@ function stopTimer() {
     return ((Date.now() - startTime) / 1000).toFixed(2);
 }
 
-// Reset idle timer (30 seconds of inactivity)
-function resetIdleTimer() {
+// Reset idle timer (30 seconds of inactivity) for Room 1
+function resetIdleTimerRoom1() {
     clearTimeout(inactivityTimer);
-    inactivityTimer = setTimeout(winGame, 30000);
+    inactivityTimer = setTimeout(winGame, 30000);  // Finish Room 1 after 30 seconds
 }
 
-document.addEventListener("mousemove", resetIdleTimer);
-document.addEventListener("keypress", resetIdleTimer);
-document.addEventListener("click", resetIdleTimer);
-
-// Win game
+// Win game and go to Room 2
 function winGame() {
     document.getElementById("passedScreen").style.display = "flex";
 
@@ -222,11 +212,7 @@ function winGame() {
         document.getElementById("room2").classList.remove("hidden");
         document.getElementById("passedScreen").style.display = "none";
         document.getElementById("room1").classList.add("hidden");
-
-        let finalTime = stopTimer();
-        window.playerScore = finalTime;
-        document.getElementById("finalTime").innerText =
-            "Your Time: " + finalTime + " seconds";
+        // Timer continues running in Room 2, no inactivity timeout here
     }, 3000);
 }
 
@@ -288,8 +274,3 @@ function goHome() {
 
 </body>
 </html>
-
-
-
-
-
