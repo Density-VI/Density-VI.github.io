@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Genuis Hour</title>
+<title>Genius Hour</title>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 
@@ -61,7 +61,7 @@ th {
 <div id="startPage" class="room">
     <h1>Escape Room Challenge</h1>
     <p>Enter your username to begin:</p>
-    <input type="Username" id="loginEmail" placeholder="Your username">
+    <input type="text" id="loginEmail" placeholder="Your username">
     <br>
     <button onclick="beginGame()">START GAME</button>
     <br><br>
@@ -73,9 +73,6 @@ th {
 <!-- ROOM 1 -->
 <div id="room1" class="room hidden">
     <h1>Escape Room - Room 1</h1>
- 
-
- 
     <p>There are many things you can click...</p>
 
     <a href="https://www.youtube.com/watch?v=Dwnui-3-o-4b" target="_blank">
@@ -88,7 +85,7 @@ th {
 
     <p>Enter the secret code:</p>
     <input type="text" placeholder="Type something...">
-<input type="submit" value="Submit" onclick="alert('Wrong answer, try again')">
+    <input type="submit" value="Submit" onclick="alert('Wrong answer, try again')">
 
     <p>
         <button onclick="alert('Hold your breath, do not move,Let no sound escape from you.I watch you in every corner,And only I can reveal the clue.')">
@@ -101,37 +98,46 @@ th {
 
 <!-- ROOM 2 -->
 <div id="room2" class="room hidden">
- <h1 style="position: fixed; top: 0; left: 0; margin: 0;">
-  <a href="https://www.youtube.com/shorts/TjP51eSK0tk" style="color: black; text-decoration: none;">!</a>
-</h1>
+    <h1 style="position: fixed; top: 0; left: 0; margin: 0;">
+        <a href="https://www.youtube.com/shorts/TjP51eSK0tk" style="color: black; text-decoration: none;">!</a>
+    </h1>
     <h1>Escape Room 2</h1>
     <p>Whats the code?</p>
- 
 
- <p style="color: black; position: fixed; bottom: 0; right: 0;">
-  .-. . .- -.. / - .... . / -.. . ... -.-. .-. .. .--. - .. --- -.
-</p>
-  
-</Head>
+    <p style="color: black; position: fixed; bottom: 0; right: 0;">
+        .-. . .- -.. / - .... . / -.. . ... -.-. .-. .. .--. - .. --- -.
+    </p>
 
-<h2> <img src="https://media.istockphoto.com/id/898585326/photo/telephone-keypad-with-buttons.jpg?s=1024x1024&w=is&k=20&c=wAUqDzrqSuYOLtov3kPE-M5Ml3h1ILaJ7NoZRmNXeTo=" alt="Telephone Keypad" width="150" <h2/>
+    <h2>
+        <img src="https://media.istockphoto.com/id/898585326/photo/telephone-keypad-with-buttons.jpg?s=1024x1024&w=is&k=20&c=wAUqDzrqSuYOLtov3kPE-M5Ml3h1ILaJ7NoZRmNXeTo=" 
+             alt="Telephone Keypad" width="150">
+    </h2>
    
-     <h3>Type the secret word to continue:</h3>
-
+    <h3>Type the secret word to continue:</h3>
     <input type="text" id="answerBox" placeholder="Enter password">
     <button onclick="checkAnswer()">Submit</button>
 
     <p id="message"></p>
- <h4>use your tools around make sure to look everywhere</h4>
+    <h4>Use your tools around make sure to look everywhere</h4>
 </div>
-    
-     <!-- ROOM 3 -->
+
+<!-- ROOM 3 -->
 <div id="room3" class="room hidden">
     <h1>Escape Room 3</h1>
-    <p>This room is blank. The timer keeps running!</p>
+    <p>This room is blank — your coding playground!</p>
+</div>
 
-    <!-- You can add more interactive elements here later -->
-    <button onclick="finishRoom3()">Finish Room 3</button>
+<!-- ROOM 4 -->
+<div id="room4" class="room hidden">
+    <h1>Escape Room 4</h1>
+    <p>This room is blank — add your own puzzles or interactive elements.</p>
+</div>
+
+<!-- ROOM 5 -->
+<div id="room5" class="room hidden">
+    <h1>Escape Room 5</h1>
+    <p>This room is blank — final challenge before finishing.</p>
+    <button onclick="finishRoom5()">Finish Escape Room</button>
 </div>
 
 <!-- FINISH PAGE -->
@@ -141,7 +147,7 @@ th {
     <button onclick="submitScore()">Submit Score</button>
     <p id="submitStatus"></p>
 </div>
-    
+
 <!-- LEADERBOARD PAGE -->
 <div id="leaderboardPage" class="room hidden">
     <h1>🏆 Your Best Times!</h1>
@@ -240,22 +246,28 @@ function winGame() {
     }, 3000);
 }
 
-// Check Room 2 answer
+// Check Room 2 answer -> Room 3
 function checkAnswer() {
     var userInput = document.getElementById("answerBox").value;
     var correctAnswer = "155596";
 
     if (userInput === correctAnswer) {
-        let finalTime = stopTimer();
-        window.playerScore = finalTime;
-
         document.getElementById("room2").classList.add("hidden");
-        document.getElementById("finishPage").classList.remove("hidden");
-        document.getElementById("finalTime").innerText =
-            "Your Time: " + finalTime + " seconds";
+        document.getElementById("room3").classList.remove("hidden");
     } else {
         document.getElementById("message").innerHTML = "Wrong answer. Try again!";
     }
+}
+
+// Finish Room 5 -> Finish page
+function finishRoom5() {
+    let finalTime = stopTimer();
+    window.playerScore = finalTime;
+
+    document.getElementById("room5").classList.add("hidden");
+    document.getElementById("finishPage").classList.remove("hidden");
+    document.getElementById("finalTime").innerText =
+        "Your Time: " + finalTime + " seconds";
 }
 
 // Submit score
@@ -325,18 +337,13 @@ function resetLeaderboard() {
 function goHome() {
     location.reload();
 }
+
+// Function to navigate between blank rooms
+function goToRoom(nextRoomId) {
+    document.querySelectorAll(".room").forEach(r => r.classList.add("hidden"));
+    document.getElementById(nextRoomId).classList.remove("hidden");
+}
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
