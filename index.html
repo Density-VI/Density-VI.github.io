@@ -124,43 +124,51 @@ th {
 <!-- ROOM 3 -->
 <div id="room3" class="room hidden">
     <h1>Escape Room 3</h1>
-  <div id="block"></div>
+
+    <style>
     #block {
-  width: 80px;
-  height: 80px;
-  background-color: blue;
-  position: absolute;
-  left: 100px;
-  top: 100px;
-  cursor: grab;
-  border-radius: 10px;
-}
-    <script>
-const block = document.getElementById("block");
+      width: 80px;
+      height: 80px;
+      background-color: blue;
+      position: absolute;
+      left: 100px;
+      top: 100px;
+      cursor: grab;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
 
-let isDragging = false;
-let offsetX, offsetY;
+  <div id="block"></div>
 
-block.addEventListener("mousedown", (e) => {
-  isDragging = true;
-  block.style.cursor = "grabbing";
+  <script>
+    const block = document.getElementById("block");
 
-  offsetX = e.clientX - block.offsetLeft;
-  offsetY = e.clientY - block.offsetTop;
-});
+    let isDragging = false;
+    let offsetX, offsetY;
 
-document.addEventListener("mousemove", (e) => {
-  if (!isDragging) return;
+    block.addEventListener("mousedown", (e) => {
+      isDragging = true;
+      block.style.cursor = "grabbing";
 
-  block.style.left = (e.clientX - offsetX) + "px";
-  block.style.top = (e.clientY - offsetY) + "px";
-});
+      offsetX = e.clientX - block.offsetLeft;
+      offsetY = e.clientY - block.offsetTop;
+    });
 
-document.addEventListener("mouseup", () => {
-  isDragging = false;
-  block.style.cursor = "grab";
-});
-</script>
+    document.addEventListener("mousemove", (e) => {
+      if (!isDragging) return;
+
+      block.style.left = (e.clientX - offsetX) + "px";
+      block.style.top = (e.clientY - offsetY) + "px";
+    });
+
+    document.addEventListener("mouseup", () => {
+      isDragging = false;
+      block.style.cursor = "grab";
+    });
+  </script>
+
 </div>
 
 <!-- ROOM 4 -->
@@ -383,4 +391,5 @@ function goToRoom(nextRoomId) {
 
 </body>
 </html>
+
 
