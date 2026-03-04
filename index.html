@@ -124,7 +124,43 @@ th {
 <!-- ROOM 3 -->
 <div id="room3" class="room hidden">
     <h1>Escape Room 3</h1>
-    <p>This room is blank — your coding playground!</p>
+  <div id="block"></div>
+    #block {
+  width: 80px;
+  height: 80px;
+  background-color: blue;
+  position: absolute;
+  left: 100px;
+  top: 100px;
+  cursor: grab;
+  border-radius: 10px;
+}
+    <script>
+const block = document.getElementById("block");
+
+let isDragging = false;
+let offsetX, offsetY;
+
+block.addEventListener("mousedown", (e) => {
+  isDragging = true;
+  block.style.cursor = "grabbing";
+
+  offsetX = e.clientX - block.offsetLeft;
+  offsetY = e.clientY - block.offsetTop;
+});
+
+document.addEventListener("mousemove", (e) => {
+  if (!isDragging) return;
+
+  block.style.left = (e.clientX - offsetX) + "px";
+  block.style.top = (e.clientY - offsetY) + "px";
+});
+
+document.addEventListener("mouseup", () => {
+  isDragging = false;
+  block.style.cursor = "grab";
+});
+</script>
 </div>
 
 <!-- ROOM 4 -->
@@ -347,3 +383,4 @@ function goToRoom(nextRoomId) {
 
 </body>
 </html>
+
