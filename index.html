@@ -38,7 +38,7 @@ input, button { padding:10px; margin:10px; }
     color:cyan;
 }
 
-/* Leaderboard Styles */
+/* Leaderboard */
 table {
     margin: 20px auto;
     border-collapse: collapse;
@@ -49,8 +49,27 @@ th, td {
     padding: 10px;
     border: 1px solid #fff;
 }
-th {
-    background-color: #333;
+th { background-color: #333; }
+
+/* Flash + Shake Effect */
+@keyframes flashRed {
+  0% { background-color: #111; }
+  25% { background-color: red; }
+  50% { background-color: #111; }
+  75% { background-color: red; }
+  100% { background-color: #111; }
+}
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  50% { transform: translateX(10px); }
+  75% { transform: translateX(-10px); }
+  100% { transform: translateX(0); }
+}
+
+.escapePunish {
+  animation: flashRed 0.6s ease-in-out 2, shake 0.4s ease-in-out 2;
 }
 </style>
 </head>
@@ -74,19 +93,11 @@ th {
 <div id="room1" class="room hidden">
     <h1>Escape Room - Room 1</h1>
     <p>There are many things you can click...</p>
-
-    <a href="https://www.youtube.com/watch?v=Dwnui-3-o-4b" target="_blank">
-        If u are bored click this
-    </a>
-
-    <a href="https://www.youtube.com/watch?v=UG9BG7oEk7s" target="_blank">
-        This is a self advertisement
-    </a>
-
+    <a href="https://www.youtube.com/watch?v=Dwnui-3-o-4b" target="_blank">If u are bored click this</a>
+    <a href="https://www.youtube.com/watch?v=UG9BG7oEk7s" target="_blank">This is a self advertisement</a>
     <p>Enter the secret code:</p>
     <input type="text" placeholder="Type something...">
     <input type="submit" value="Submit" onclick="alert('Wrong answer, try again')">
-
     <p>
         <button onclick="alert('Hold your breath, do not move,Let no sound escape from you.I watch you in every corner,And only I can reveal the clue.')">
             Mysterious button
@@ -98,27 +109,22 @@ th {
 
 <!-- ROOM 2 -->
 <div id="room2" class="room hidden">
+    <h1>Escape Room 2</h1>
     <h1 style="position: fixed; top: 0; left: 0; margin: 0;">
         <a href="https://www.youtube.com/shorts/TjP51eSK0tk" style="color: black; text-decoration: none;">!</a>
     </h1>
-    <h1>Escape Room 2</h1>
-    <p>Whats the code?</p>
-
     <p style="color: black; position: fixed; bottom: 0; right: 0;">
-        .-. . .- -.. / - .... . / -.. . ... -.-. .-. .. .--. - .. --- -.
-    </p>
-
+  .-.. --- --- -.- / .. -. / - .... . / -.. . ... -.-. .-. .. .--. - .. --- -.
+</p>
     <h2>
         <img src="https://media.istockphoto.com/id/898585326/photo/telephone-keypad-with-buttons.jpg?s=1024x1024&w=is&k=20&c=wAUqDzrqSuYOLtov3kPE-M5Ml3h1ILaJ7NoZRmNXeTo=" 
              alt="Telephone Keypad" width="150">
     </h2>
-   
+    <p>Whats the code?</p>
     <h3>Type the secret word to continue:</h3>
     <input type="text" id="answerBox" placeholder="Enter password">
     <button onclick="checkAnswer()">Submit</button>
-
     <p id="message"></p>
-    <h4>Use your tools around make sure to look everywhere</h4>
 </div>
 
 <!-- ROOM 3 -->
@@ -126,10 +132,6 @@ th {
     <h1>Escape Room 3</h1>
 
 <style>
-body {
-  font-family: Arial, sans-serif;
-}
-
 /* Game box */
 #game {
   position: relative;
@@ -156,10 +158,8 @@ body {
   border-radius: 10px;
 }
 </style>
-</head>
-<body>
 
-<h2>🧩 Hard Mode: Match All 4 Blocks!</h2>
+<h2> Figure it out your smart enough</h2>
 
 <div id="game">
   <!-- Targets -->
@@ -168,7 +168,7 @@ body {
   <div class="target" data-color="green" style="left:500px; top:250px;"></div>
   <div class="target" data-color="purple" style="left:500px; top:350px;"></div>
 
-  <!-- Blocks (start left side, shuffled vertically) -->
+  <!-- Blocks -->
   <div class="block" data-color="red" style="background:red; left:50px; top:60px;"></div>
   <div class="block" data-color="blue" style="background:blue; left:150px; top:200px;"></div>
   <div class="block" data-color="green" style="background:green; left:80px; top:320px;"></div>
@@ -176,9 +176,8 @@ body {
 </div>
 
 <script>
-const blocks = document.querySelectorAll(".block");
-const targets = document.querySelectorAll(".target");
-
+const blocks = document.querySelectorAll("#room3 .block");
+const targets = document.querySelectorAll("#room3 .target");
 let completed = 0;
 
 blocks.forEach(block => {
@@ -229,6 +228,7 @@ function checkWin() {
   if (completed === blocks.length) {
     setTimeout(() => {
       alert("🔥 You Beat Hard Mode!");
+      goToRoom("room4"); 
     }, 200);
   }
 }
@@ -238,14 +238,27 @@ function checkWin() {
 <!-- ROOM 4 -->
 <div id="room4" class="room hidden">
     <h1>Escape Room 4</h1>
-    <p>This room is blank — add your own puzzles or interactive elements.</p>
+    <button onclick="startRoom5()">Enter Final Boss</button>
 </div>
 
-<!-- ROOM 5 -->
+<!-- ROOM 5 – FINAL BOSS -->
 <div id="room5" class="room hidden">
-    <h1>Escape Room 5</h1>
-    <p>This room is blank — final challenge before finishing.</p>
-    <button onclick="finishRoom5()">Finish Escape Room</button>
+    <h1>FINAL BOSS</h1>
+    <p id="bossMessage">The final door does not open for the impatient.</p>
+
+    <div id="bossPhase2" class="hidden">
+        <h2>Translate what you have become.</h2>
+        <p style="letter-spacing:5px;">SILENCE</p>
+        <input type="text" id="bossInput" placeholder="Enter code">
+        <button onclick="checkBossCode()">Submit</button>
+        <p id="bossFeedback"></p>
+    </div>
+
+    <div id="bossFinalChoice" class="hidden">
+        <h2>The final choice.</h2>
+        <button onclick="wrongChoice()">ESCAPE</button>
+        <button onclick="correctChoice()">STAY</button>
+    </div>
 </div>
 
 <!-- FINISH PAGE -->
@@ -272,22 +285,22 @@ function checkWin() {
 </div>
 
 <script>
-// Global variables
+// GLOBAL VARIABLES
 let playerEmail = "";
 let startTime;
 let timerInterval;
 let inactivityTimer;
 
-// Leaderboard storage
+let bossStillTimer;
+let bossPhase = 1;
+
 const LEADERBOARD_KEY = "escapeRoomLeaderboard";
 
-// Get leaderboard
+// Leaderboard
 function getLeaderboard() {
     const leaderboard = localStorage.getItem(LEADERBOARD_KEY);
     return leaderboard ? JSON.parse(leaderboard) : [];
 }
-
-// Save leaderboard
 function saveLeaderboard(leaderboard) {
     localStorage.setItem(LEADERBOARD_KEY, JSON.stringify(leaderboard));
 }
@@ -299,7 +312,6 @@ function beginGame() {
         alert("Please choose a username.");
         return;
     }
-
     playerEmail = emailInput;
 
     document.getElementById("startPage").classList.add("hidden");
@@ -308,30 +320,26 @@ function beginGame() {
 
     startTime = Date.now();
     timerInterval = setInterval(updateTimer, 10);
-
     resetIdleTimerRoom1();
 }
 
-// Update timer
 function updateTimer() {
     let elapsed = (Date.now() - startTime) / 1000;
     document.getElementById("timerDisplay").innerText =
         "Time: " + elapsed.toFixed(2) + "s";
 }
 
-// Stop timer
 function stopTimer() {
     clearInterval(timerInterval);
     return ((Date.now() - startTime) / 1000).toFixed(2);
 }
 
-// 30 second inactivity for Room 1 only
+// ROOM 1 inactivity
 function resetIdleTimerRoom1() {
     clearTimeout(inactivityTimer);
     inactivityTimer = setTimeout(winGame, 30000);
 }
 
-// Reset inactivity on interaction
 function resetActivityTimer() {
     if (!document.getElementById("room1").classList.contains("hidden")) {
         resetIdleTimerRoom1();
@@ -342,83 +350,95 @@ document.addEventListener("mousemove", resetActivityTimer);
 document.addEventListener("keypress", resetActivityTimer);
 document.addEventListener("click", resetActivityTimer);
 
-// Move to Room 2
 function winGame() {
     document.getElementById("passedScreen").style.display = "flex";
-
     setTimeout(() => {
-        document.getElementById("room2").classList.remove("hidden");
+        goToRoom("room2");
         document.getElementById("passedScreen").style.display = "none";
-        document.getElementById("room1").classList.add("hidden");
-        clearTimeout(inactivityTimer); // stop inactivity timer
     }, 3000);
 }
 
-// Check Room 2 answer -> Room 3
 function checkAnswer() {
     var userInput = document.getElementById("answerBox").value;
-    var correctAnswer = "155596";
-
-    if (userInput === correctAnswer) {
-        document.getElementById("room2").classList.add("hidden");
-        document.getElementById("room3").classList.remove("hidden");
+    if (userInput === "155596") {
+        goToRoom("room3");
     } else {
         document.getElementById("message").innerHTML = "Wrong answer. Try again!";
     }
 }
 
-// Finish Room 5 -> Finish page
-function finishRoom5() {
+function goToRoom(nextRoomId) {
+    document.querySelectorAll(".room").forEach(r => r.classList.add("hidden"));
+    document.getElementById(nextRoomId).classList.remove("hidden");
+}
+
+// FINAL BOSS
+function startRoom5() {
+    goToRoom("room5");
+    bossPhase = 1;
+
+    bossStillTimer = setTimeout(unlockBossPhase2, 15000);
+
+    document.addEventListener("mousemove", resetBossStill);
+    document.addEventListener("keydown", resetBossStill);
+    document.addEventListener("click", resetBossStill);
+}
+
+function resetBossStill() {
+    if (bossPhase !== 1) return;
+    clearTimeout(bossStillTimer);
+    bossStillTimer = setTimeout(unlockBossPhase2, 15000);
+}
+
+function unlockBossPhase2() {
+    bossPhase = 2;
+    document.getElementById("bossMessage").innerText =
+        "You have mastered patience.";
+    document.getElementById("bossPhase2").classList.remove("hidden");
+}
+
+function checkBossCode() {
+    const input = document.getElementById("bossInput").value;
+    if (input === "7453623") {
+        document.getElementById("bossPhase2").classList.add("hidden");
+        document.getElementById("bossFinalChoice").classList.remove("hidden");
+    } else {
+        document.getElementById("bossFeedback").innerText = "Wrong. Think deeper.";
+    }
+}
+
+function wrongChoice() { 
+    alert("You cannot escape what you have become..."); 
+    location.reload();
+}
+
+function correctChoice() {
     let finalTime = stopTimer();
     window.playerScore = finalTime;
-
-    document.getElementById("room5").classList.add("hidden");
-    document.getElementById("finishPage").classList.remove("hidden");
+    goToRoom("finishPage");
     document.getElementById("finalTime").innerText =
         "Your Time: " + finalTime + " seconds";
 }
 
-// Submit score
+// Leaderboard
 function submitScore() {
     let leaderboard = getLeaderboard();
-
-    leaderboard.push({
-        email: playerEmail,
-        score: window.playerScore
-    });
-
-    leaderboard.sort((a, b) =>
-        parseFloat(a.score) - parseFloat(b.score)
-    );
-
-    if (leaderboard.length > 10) {
-        leaderboard = leaderboard.slice(0, 10);
-    }
-
+    leaderboard.push({ email: playerEmail, score: window.playerScore });
+    leaderboard.sort((a, b) => parseFloat(a.score) - parseFloat(b.score));
+    if (leaderboard.length > 10) leaderboard = leaderboard.slice(0, 10);
     saveLeaderboard(leaderboard);
-
     document.getElementById("submitStatus").innerText =
         "Score Submitted Successfully!";
 }
 
-// Show leaderboard
 function showLeaderboard() {
-    document.querySelectorAll(".room")
-        .forEach(r => r.classList.add("hidden"));
-
-    document.getElementById("leaderboardPage")
-        .classList.remove("hidden");
+    document.querySelectorAll(".room").forEach(r => r.classList.add("hidden"));
+    document.getElementById("leaderboardPage").classList.remove("hidden");
 
     const leaderboard = getLeaderboard();
     const table = document.getElementById("leaderboardTable");
 
-    table.innerHTML = `
-        <tr>
-            <th>Rank</th>
-            <th>Email</th>
-            <th>Score</th>
-        </tr>
-    `;
+    table.innerHTML = `<tr><th>Rank</th><th>Email</th><th>Score</th></tr>`;
 
     leaderboard.forEach((entry, index) => {
         let row = table.insertRow();
@@ -428,10 +448,8 @@ function showLeaderboard() {
     });
 }
 
-// 🔐 Reset leaderboard with secret code
 function resetLeaderboard() {
     let code = prompt("Enter reset code:");
-
     if (code === "937362") {
         localStorage.removeItem(LEADERBOARD_KEY);
         alert("Leaderboard has been reset.");
@@ -441,26 +459,30 @@ function resetLeaderboard() {
     }
 }
 
-// Go home
 function goHome() {
     location.reload();
 }
 
-// Function to navigate between blank rooms
-function goToRoom(nextRoomId) {
-    document.querySelectorAll(".room").forEach(r => r.classList.add("hidden"));
-    document.getElementById(nextRoomId).classList.remove("hidden");
-}
+// 🔥 ESC Trap for Final Boss
+document.addEventListener("keydown", function(event) {
+    if (event.key === "Escape") {
+
+        const finalChoiceVisible =
+            !document.getElementById("bossFinalChoice").classList.contains("hidden");
+
+        if (finalChoiceVisible) {
+            document.body.classList.add("escapePunish");
+
+            setTimeout(function() {
+                document.body.classList.remove("escapePunish");
+                alert("You cannot escape.");
+                location.reload(); // full restart
+            }, 1000);
+        }
+    }
+});
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
 
