@@ -143,7 +143,110 @@ body {
 .target {
   width: 80px;
   height: 80px;
+  border: 3px black <style>
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Puzzle area */
+#game {
+  position: relative;
+  width: 600px;
+  height: 300px;
+  border: 2px solid black;
+  margin-top: 20px;
+}
+
+/* Target spots */
+.target {
+  width: 80px;
+  height: 80px;
   border: 3px dashed gray;
+  position: absolute;
+}
+
+/* Draggable blocks */
+.block {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  cursor: grab;
+  border-radius: 10px;
+}
+</style>
+</head>
+<body>
+
+<h2>🧩 Drag the blocks into the matching spots!</h2>
+
+<div id="game">
+  <!-- Targets -->
+  <div class="target" data-color="red" style="left:400px; top:50px;"></div>
+  <div class="target" data-color="blue" style="left:400px; top:170px;"></div>
+
+  <!-- Blocks -->
+  <div class="block" data-color="red" style="background:red; left:50px; top:50px;"></div>
+  <div class="block" data-color="blue" style="background:blue; left:50px; top:170px;"></div>
+</div>
+
+<script>
+const blocks = document.querySelectorAll(".block");
+const targets = document.querySelectorAll(".target");
+
+let completed = 0;
+
+blocks.forEach(block => {
+  let isDragging = false;
+  let offsetX, offsetY;
+
+  block.addEventListener("mousedown", (e) => {
+    isDragging = true;
+    offsetX = e.clientX - block.offsetLeft;
+    offsetY = e.clientY - block.offsetTop;
+  });
+
+  document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    block.style.left = (e.clientX - offsetX) + "px";
+    block.style.top = (e.clientY - offsetY) + "px";
+  });
+
+  document.addEventListener("mouseup", () => {
+    if (!isDragging) return;
+    isDragging = false;
+
+    targets.forEach(target => {
+      const rect1 = block.getBoundingClientRect();
+      const rect2 = target.getBoundingClientRect();
+
+      const overlap = !(
+        rect1.right < rect2.left ||
+        rect1.left > rect2.right ||
+        rect1.bottom < rect2.top ||
+        rect1.top > rect2.bottom
+      );
+
+      if (overlap && block.dataset.color === target.dataset.color) {
+        block.style.left = target.style.left;
+        block.style.top = target.style.top;
+        block.style.cursor = "default";
+        block.removeEventListener("mousedown", null);
+        completed++;
+        checkWin();
+      }
+    });
+  });
+});
+
+function checkWin() {
+  if (completed === blocks.length) {
+    setTimeout(() => {
+      alert("🎉 Puzzle Complete!");
+    }, 200);
+  }
+}
+</script>
+;
   position: absolute;
 }
 
@@ -451,6 +554,7 @@ function goToRoom(nextRoomId) {
 
 </body>
 </html>
+
 
 
 
