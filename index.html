@@ -194,7 +194,7 @@ let completed = 0;
 /* RANDOM TARGET GENERATOR */
 
 function randomizeTargets(){
-
+ 
   const boardWidth = 700;
   const boardHeight = 400;
   const size = 80;
@@ -211,6 +211,8 @@ function randomizeTargets(){
       x = Math.random() * (boardWidth - size);
       y = Math.random() * (boardHeight - size);
 
+    consle.log(x,y);
+        
       safe = true;
 
       /* CHECK FOR OVERLAP */
@@ -582,6 +584,7 @@ document.addEventListener("keydown", function(event) {
 
 </body>
 </html>
+
 
 
 
