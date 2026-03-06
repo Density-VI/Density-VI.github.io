@@ -114,7 +114,19 @@ th { background-color: #333; }
 
 <!-- START PAGE -->
 <div id="startPage" class="room">
-    <h1>Escape Room Challenge</h1>
+    <h1 style="
+  background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: rainbow 3s linear infinite;
+">Escape Room</h1>
+
+<style>
+@keyframes rainbow {
+  0% { background-position: 0% }
+  100% { background-position: 100% }
+}
+</style>
     <p>Enter your username to begin:</p>
     <input type="text" id="loginEmail" placeholder="Your username">
     <br>
@@ -126,8 +138,19 @@ th { background-color: #333; }
 <div id="timerDisplay" class="hidden">Time: 0.00s</div>
 
 <!-- ROOM 1 -->
-<div id="room1" class="room hidden">
-    <h1>Escape Room - Room 1</h1>
+<div id="room1" class="room hidden"><h1 style="
+  background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: rainbow 3s linear infinite;
+">Escape Room - Room 1</h1>
+
+<style>
+@keyframes rainbow {
+  0% { background-position: 0% }
+  100% { background-position: 100% }
+}
+</style>
     <p>There are many things you can click...</p>
     <a href="https://www.youtube.com/watch?v=Dwnui-3-o-4b" target="_blank">If u are bored click this</a>
     <a href="https://www.youtube.com/watch?v=UG9BG7oEk7s" target="_blank">This is a self advertisement</a>
@@ -192,7 +215,99 @@ th { background-color: #333; }
 
 <!-- ROOM 4 -->
 <div id="room4" class="room hidden">
-    <h1>Escape Room 4</h1>
+    <meta charset="UTF-8">
+<title>Simple Slot Machine</title>
+
+<style>
+body{
+  text-align:center;
+  font-family:Arial;
+  background:#222;
+  color:white;
+}
+
+h1{
+  margin-top:30px;
+}
+
+.slot-machine{
+  display:flex;
+  justify-content:center;
+  margin:30px;
+}
+
+.slot{
+  font-size:60px;
+  margin:10px;
+  padding:20px;
+  border:4px solid white;
+  width:100px;
+  height:100px;
+  background:black;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:10px;
+}
+
+button{
+  font-size:20px;
+  padding:10px 25px;
+  cursor:pointer;
+  border:none;
+  border-radius:8px;
+  background:gold;
+}
+
+button:hover{
+  background:orange;
+}
+
+#result{
+  font-size:24px;
+  margin-top:20px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>🎰 Slot Machine</h1>
+
+<div class="slot-machine">
+  <div class="slot" id="slot1">❓</div>
+  <div class="slot" id="slot2">❓</div>
+  <div class="slot" id="slot3">❓</div>
+</div>
+
+<button onclick="spin()">Spin</button>
+
+<p id="result"></p>
+
+<script>
+
+function spin(){
+
+  const symbols = ["🍒","🍋","🍊","⭐","💎"];
+
+  const s1 = symbols[Math.floor(Math.random()*symbols.length)];
+  const s2 = symbols[Math.floor(Math.random()*symbols.length)];
+  const s3 = symbols[Math.floor(Math.random()*symbols.length)];
+
+  document.getElementById("slot1").textContent = s1;
+  document.getElementById("slot2").textContent = s2;
+  document.getElementById("slot3").textContent = s3;
+
+  if(s1 === s2 && s2 === s3){
+    document.getElementById("result").textContent = "🎉 JACKPOT!";
+  }else{
+    document.getElementById("result").textContent = "Try Again!";
+  }
+
+}
+
+</script>
     <button onclick="startRoom5()">Enter Final Room</button>
 </div>
 
@@ -313,7 +428,7 @@ function winGame() {
 /* ------------------- ROOM 2 ------------------- */
 function checkAnswer() {
     var userInput = document.getElementById("answerBox").value;
-    if (userInput === "155596") {
+    if (userInput === "1596") {
         goToRoom("room3");
     } else {
         document.getElementById("message").innerHTML = "Wrong answer. Try again!";
@@ -555,3 +670,7 @@ document.addEventListener("keydown", function(event) {
 
 </body>
 </html>
+
+
+
+
