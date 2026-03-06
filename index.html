@@ -93,7 +93,7 @@ th { background-color: #333; }
 <div id="room1" class="room hidden">
     <h1>Escape Room - Room 1</h1>
     <p>There are many things you can click...</p>
-    <a href="https://www.youtube.com/watch?v=Dwnui-3-o-4b" target="_blank">If u are bored click this/</a>
+    <a href="https://www.youtube.com/watch?v=Dwnui-3-o-4b" target="_blank">If u are bored click this</a>
     <a href="https://www.youtube.com/watch?v=UG9BG7oEk7s" target="_blank">This is a self advertisement</a>
     <p>Enter the secret code:</p>
     <input type="text" placeholder="Type something...">
@@ -132,156 +132,79 @@ th { background-color: #333; }
 
 <!-- ROOM 3 -->
 <div id="room3" class="room hidden">
-
 <h1>Escape Room 3</h1>
 
 <style>
-
-#game{
-  position:relative;
-  width:700px;
-  height:400px;
-  border:3px solid black;
-  margin-top:20px;
+#game {
+  position: relative;
+  width: 700px;
+  height: 400px;
+  margin-top: 20px;
 }
 
-/* TARGET BOXES */
-.target{
-  width:80px;
-  height:80px;
-  border:3px dashed yellow;
-  position:absolute;
+/* Targets (no outline now) */
+.target {
+  width: 80px;
+  height: 80px;
+  position: absolute;
 }
 
-/* DRAG BLOCKS */
-.block{
-  width:80px;
-  height:80px;
-  position:absolute;
-  cursor:grab;
-  border-radius:10px;
+/* Blocks */
+.block {
+  width: 80px;
+  height: 80px;
+  position: absolute;
+  cursor: grab;
+  border-radius: 10px;
+  background: black;
 }
-
 </style>
 
-<h2>Figure it out you're smart enough</h2>
+<h2>Figure it out your smart enough</h2>
 
 <div id="game">
+  <!-- Targets -->
+  <div class="target" data-color="black" style="left:500px; top:50px;"></div>
+  <div class="target" data-color="grey" style="left:500px; top:150px;"></div>
+  <div class="target" data-color="green" style="left:500px; top:250px;"></div>
+  <div class="target" data-color="purple" style="left:500px; top:350px;"></div>
 
-<!-- TARGETS (NO FIXED POSITIONS) -->
-<div class="target" data-color="black"></div>
-<div class="target" data-color="grey"></div>
-<div class="target" data-color="green"></div>
-<div class="target" data-color="purple"></div>
-
-<!-- BLOCKS -->
-<div class="block" data-color="black" style="background:black; left:50px; top:60px"></div>
-<div class="block" data-color="grey" style="background:grey; left:150px; top:200px"></div>
-<div class="block" data-color="green" style="background:green; left:80px; top:320px"></div>
-<div class="block" data-color="purple" style="background:purple; left:200px; top:120px"></div>
-
+  <!-- Blocks (all black now) -->
+  <div class="block" data-color="black" style="left:50px; top:60px;"></div>
+  <div class="block" data-color="grey" style="left:150px; top:200px;"></div>
+  <div class="block" data-color="green" style="left:80px; top:320px;"></div>
+  <div class="block" data-color="purple" style="left:200px; top:120px;"></div>
 </div>
 
-<script>
+<button id="room3Submit" style="display:none;" onclick="goToRoom('room4')">Submit</button>
 
+<script>
 const blocks = document.querySelectorAll("#room3 .block");
 const targets = document.querySelectorAll("#room3 .target");
-const game = document.getElementById("game");
-
 let completed = 0;
 
-
-/* RANDOM TARGET GENERATOR */
-
-function randomizeTargets(){
- 
-  const boardWidth = 700;
-  const boardHeight = 400;
-  const size = 80;
-
-  const positions = [];
-
-  targets.forEach(target=>{
-
-    let safe = false;
-    let x,y;
-
-    while(!safe){
-
-      x = Math.random() * (boardWidth - size);
-      y = Math.random() * (boardHeight - size);
-
-    consle.log(x,y);
-        
-      safe = true;
-
-      /* CHECK FOR OVERLAP */
-      for(let pos of positions){
-
-        if(
-          Math.abs(x - pos.x) < size &&
-          Math.abs(y - pos.y) < size
-        ){
-          safe = false;
-          break;
-        }
-
-      }
-
-    }
-
-    positions.push({x:x,y:y});
-
-    target.style.left = x + "px";
-    target.style.top = y + "px";
-
-  });
-
-}
-
-
-/* RUN RANDOMIZER AFTER ROOM LOADS */
-
-setTimeout(randomizeTargets,100);
-
-
-/* DRAG SYSTEM */
-
-blocks.forEach((block)=>{
-
+blocks.forEach(block => {
   let isDragging = false;
   let offsetX, offsetY;
 
-  block.addEventListener("mousedown",(e)=>{
-
-    if(block.dataset.locked === "true") return;
-
+  block.addEventListener("mousedown", (e) => {
+    if (block.dataset.locked === "true") return;
     isDragging = true;
-
     offsetX = e.clientX - block.offsetLeft;
     offsetY = e.clientY - block.offsetTop;
-
   });
 
-
-  document.addEventListener("mousemove",(e)=>{
-
-    if(!isDragging) return;
-
-    block.style.left = e.clientX - offsetX + "px";
-    block.style.top = e.clientY - offsetY + "px";
-
+  document.addEventListener("mousemove", (e) => {
+    if (!isDragging) return;
+    block.style.left = (e.clientX - offsetX) + "px";
+    block.style.top = (e.clientY - offsetY) + "px";
   });
 
-
-  document.addEventListener("mouseup",()=>{
-
-    if(!isDragging) return;
-
+  document.addEventListener("mouseup", () => {
+    if (!isDragging) return;
     isDragging = false;
 
-    targets.forEach((target)=>{
-
+    targets.forEach(target => {
       const rect1 = block.getBoundingClientRect();
       const rect2 = target.getBoundingClientRect();
 
@@ -292,48 +215,25 @@ blocks.forEach((block)=>{
         rect1.top > rect2.bottom
       );
 
-      if(overlap && block.dataset.color === target.dataset.color){
-
+      if (overlap && block.dataset.color === target.dataset.color) {
         block.style.left = target.style.left;
         block.style.top = target.style.top;
-
         block.dataset.locked = "true";
         block.style.cursor = "default";
-
         completed++;
-
         checkWin();
-
       }
-
     });
-
   });
-
 });
 
-
-function checkWin(){
-
-  if(completed === blocks.length){
-
-    setTimeout(()=>{
-
-      alert("🔥 You Beat Hard Mode!");
-
-      goToRoom("room4");
-
-    },200);
-
+function checkWin() {
+  if (completed === blocks.length) {
+    document.getElementById("room3Submit").style.display = "inline-block";
   }
-
 }
-
 </script>
-
 </div>
-
-
 <!-- ROOM 4 -->
 <div id="room4" class="room hidden">
     <h1>Escape Room 4</h1>
@@ -584,16 +484,3 @@ document.addEventListener("keydown", function(event) {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
