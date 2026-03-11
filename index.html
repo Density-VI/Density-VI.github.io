@@ -214,7 +214,7 @@ th { background-color: #333; }
 </div>
 
 <!-- ROOM 4 -->
-<div id="room4" class="room hidden">
+    <div id="room4" class="room hidden">
     <meta charset="UTF-8">
 <title>Simple Slot Machine</title>
 
@@ -272,45 +272,70 @@ button:hover{
 </head>
 
 <body>
+    <h1>🎰 Slot Machine</h1>
 
-<h1>🎰 Slot Machine</h1>
+    <div class="slot-machine">
+      <div class="slot" id="slot1">❓</div>
+      <div class="slot" id="slot2">❓</div>
+      <div class="slot" id="slot3">❓</div>
+    </div>
 
-<div class="slot-machine">
-  <div class="slot" id="slot1">❓</div>
-  <div class="slot" id="slot2">❓</div>
-  <div class="slot" id="slot3">❓</div>
-</div>
+    <button onclick="spin()">Spin</button>
+    <p id="result"></p>
 
-<button onclick="spin()">Spin</button>
-
-<p id="result"></p>
+    <h3>Balance: $<span id="balanceDisplay">1000</span></h3>
+    <button onclick="startRoom5()">Enter Final Room</button>
 
 <script>
+let balance = 1000; // Starting money
+const winAmount = 500;
+const gambleCost = 10;
+const targetAmount = 5000;
 
-function spin(){
-
-  const symbols = ["🍒","🍋","🍊","⭐","💎"];
-
-  const s1 = symbols[Math.floor(Math.random()*symbols.length)];
-  const s2 = symbols[Math.floor(Math.random()*symbols.length)];
-  const s3 = symbols[Math.floor(Math.random()*symbols.length)];
-
-  document.getElementById("slot1").textContent = s1;
-  document.getElementById("slot2").textContent = s2;
-  document.getElementById("slot3").textContent = s3;
-
-  if(s1 === s2 && s2 === s3){
-    document.getElementById("result").textContent = "🎉 JACKPOT!";
-  }else{
-    document.getElementById("result").textContent = "Try Again!";
-  }
-
+function updateBalanceDisplay(){
+    document.getElementById("balanceDisplay").textContent = balance;
 }
 
-</script>
-    <button onclick="startRoom5()">Enter Final Room</button>
-</div>
+function spin(){
+    if(balance < gambleCost){
+        alert("Not enough money to gamble!");
+        return;
+    }
 
+    balance -= gambleCost; // Pay $10 to play
+    updateBalanceDisplay();
+
+    const symbols = ["🍒","🍋","🍊","⭐","💎"];
+    const s1 = symbols[Math.floor(Math.random()*symbols.length)];
+    const s2 = symbols[Math.floor(Math.random()*symbols.length)];
+    const s3 = symbols[Math.floor(Math.random()*symbols.length)];
+
+    document.getElementById("slot1").textContent = s1;
+    document.getElementById("slot2").textContent = s2;
+    document.getElementById("slot3").textContent = s3;
+
+    if(s1 === s2 && s2 === s3){
+        balance += winAmount; // Add $125 for a win
+        document.getElementById("result").textContent = "🎉 JACKPOT! +$" + winAmount;
+    }else{
+        document.getElementById("result").textContent = "Try Again!";
+    }
+
+    updateBalanceDisplay();
+}
+
+function startRoom5(){
+    if(balance >= targetAmount){
+        goToRoom("room5");
+    }else{
+        alert("You need $" + targetAmount + " to enter Room 5. Keep gambling!");
+    }
+}
+
+// Initialize balance display
+updateBalanceDisplay();
+</script>
+</div>
 <!-- ROOM 5 – FINAL BOSS -->
 <div id="room5" class="room hidden">
     <h1>FINAL ROOM!</h1>
@@ -418,7 +443,11 @@ document.addEventListener("keypress", resetActivityTimer);
 document.addEventListener("click", resetActivityTimer);
 
 function winGame() {
+
+    if(document.getElementById("room1").classList.contains("hidden")) return;
+
     document.getElementById("passedScreen").style.display = "flex";
+
     setTimeout(() => {
         goToRoom("room2");
         document.getElementById("passedScreen").style.display = "none";
@@ -437,6 +466,9 @@ function checkAnswer() {
 
 /* ------------------- ROOM NAVIGATION ------------------- */
 function goToRoom(nextRoomId) {
+
+    clearTimeout(inactivityTimer); // stop room1 idle timer
+
     document.querySelectorAll(".room").forEach(r => r.classList.add("hidden"));
     document.getElementById(nextRoomId).classList.remove("hidden");
 
@@ -533,7 +565,7 @@ const r = t.getBoundingClientRect();
 
 const overlap = !(b.right<r.left||b.left>r.right||b.bottom<r.top||b.top>r.bottom);
 
-if(overlap){
+if(overlap && active.dataset.locked !== "true"){
 
 active.style.left = t.style.left;
 active.style.top = t.style.top;
@@ -579,9 +611,16 @@ function resetBossStill() {
 }
 
 function unlockBossPhase2() {
+
     bossPhase = 2;
+
+    document.removeEventListener("mousemove", resetBossStill);
+    document.removeEventListener("keydown", resetBossStill);
+    document.removeEventListener("click", resetBossStill);
+
     document.getElementById("bossMessage").innerText =
         "You have mastered patience.";
+
     document.getElementById("bossPhase2").classList.remove("hidden");
 }
 
@@ -670,6 +709,10 @@ document.addEventListener("keydown", function(event) {
 
 </body>
 </html>
+
+
+
+
 
 
 
