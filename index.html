@@ -298,14 +298,14 @@ function updateBalanceDisplay(){
 
 function spin(){
     if(balance < gambleCost){
-        alert("Not enough money to gamble!");
+        alert("Reload your page you suk at gambling");
         return;
     }
 
-    balance -= gambleCost; // Pay $10 to play
+    balance -= gambleCost; // Pay $15 to play
     updateBalanceDisplay();
 
-    const symbols = ["🍒","🍋","🍊","⭐","💎"];
+    const symbols = ["🍑","🥞","💲","⭐","💎"];
     const s1 = symbols[Math.floor(Math.random()*symbols.length)];
     const s2 = symbols[Math.floor(Math.random()*symbols.length)];
     const s3 = symbols[Math.floor(Math.random()*symbols.length)];
@@ -593,7 +593,13 @@ goToRoom("room4");
 };
 
 /* ------------------- FINAL BOSS ------------------- */
-function startRoom5() {
+    function startRoom5() {
+
+    if(balance < targetAmount){
+        alert("You need $" + targetAmount + " to enter Room 5. Keep gambling!");
+        return;
+    }
+
     goToRoom("room5");
     bossPhase = 1;
 
@@ -602,12 +608,6 @@ function startRoom5() {
     document.addEventListener("mousemove", resetBossStill);
     document.addEventListener("keydown", resetBossStill);
     document.addEventListener("click", resetBossStill);
-}
-
-function resetBossStill() {
-    if (bossPhase !== 1) return;
-    clearTimeout(bossStillTimer);
-    bossStillTimer = setTimeout(unlockBossPhase2, 15000);
 }
 
 function unlockBossPhase2() {
@@ -709,11 +709,3 @@ document.addEventListener("keydown", function(event) {
 
 </body>
 </html>
-
-
-
-
-
-
-
-
