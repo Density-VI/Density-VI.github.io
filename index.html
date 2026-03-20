@@ -370,8 +370,14 @@ updateBalanceDisplay();
     <h1>Room 6</h1>
     <p>You’re getting close...</p>
 
-    <button onclick="goToRoom('room7')">Continue</button>
+    <p><i>"Nothing is given."</i></p>
+
+    <p>Enter the code:</p>
+    <input type="text" id="room6Code">
+    <button onclick="checkRoom6()">Submit</button>
 </div>
+    <!-- part1: 74 -->
+    
   <div>
           <div id="room7" class="room hidden">
     <h1>Room 7</h1>
@@ -761,31 +767,31 @@ document.addEventListener("keydown", function(event) {
         }
     }
 });
+
+
+
+  /* ========= ROOM 6 CONSOLE PUZZLE ========= */
+
+// Sneaky console hint (looks like dev stuff)
+console.log("dev_mode:", [162, 734, 962].join(""));
+
+// Optional extra hint (faint text)
+console.log("%cNothing is shown. Everything is logged.", "color: gray; font-size: 12px;");
+
+// Check function for Room 6
+function checkRoom6(){
+    const input = document.getElementById("room6Code").value;
+
+    const realCode = "162734962";
+
+    if(input === realCode){
+        goToRoom("room7");
+    } else {
+        alert("Wrong code...");
+    }
+}
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
