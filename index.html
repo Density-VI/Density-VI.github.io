@@ -86,7 +86,7 @@ th { background-color: #333; }
 .target{
     width:80px;
     height:80px;
-    border:4px dashed dark gray;
+    border:4px dashed yellow;
     position:absolute;
     border-radius:10px;
 }
@@ -365,7 +365,7 @@ updateBalanceDisplay();
         <button onclick="correctChoice()">STAY</button>
     </div>
 </div>
-    <!-- ✅ ADD THIS HERE -->
+    <!-- Room 6 -->
 <div id="room6" class="room hidden">
     <h1>Room 6</h1>
     <p>You’re getting close...</p>
@@ -376,14 +376,34 @@ updateBalanceDisplay();
     <input type="text" id="room6Code">
     <button onclick="checkRoom6()">Submit</button>
 </div>
-    <!-- part1: 74 -->
-    
-  <div>
-          <div id="room7" class="room hidden">
+    <!-- room 7 -->
+<div id="room7" class="room hidden">
     <h1>Room 7</h1>
-    <p>One last step before the final challenge.</p>
+    <p>Good luck youll need it!.</p>
+
+    <p>Time to escape this final step!</p>
+    <div id="room7Countdown" style="font-size:40px; color:yellow;">01:00</div>
 
     <button onclick="finishGame()">🏁 Finish Game</button>
+</div>
+    
+    <div id="fakeAd" style="
+    display:none;
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    color:white;
+    font-size:30px;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    z-index:9999;
+">
+    <p>🚨 WAIT! Special Offer!</p>
+    <p>Skip ad in <span id="adTimer">3</span>...</p>
 </div>
 
 <!-- FINISH PAGE -->
@@ -391,6 +411,7 @@ updateBalanceDisplay();
     <h1>YOU ESCAPED</h1>
     <h2 id="finalTime"></h2>
     <button onclick="submitScore()">Submit Score</button>
+    goToRoom("leaderboardPage");
     <p id="submitStatus"></p>
 </div>
 
@@ -501,7 +522,7 @@ function checkAnswer() {
 /* ------------------- ROOM NAVIGATION ------------------- */
 function goToRoom(nextRoomId) {
 
-    clearTimeout(inactivityTimer); // stop room1 idle timer
+    clearTimeout(inactivityTimer);
 
     document.querySelectorAll(".room").forEach(r => r.classList.add("hidden"));
     document.getElementById(nextRoomId).classList.remove("hidden");
@@ -509,8 +530,18 @@ function goToRoom(nextRoomId) {
     if(nextRoomId === "room3"){
         enterRoom3();
     }
-}
 
+    // ✅ ROOM 7 LOGIC
+    if(nextRoomId === "room7"){
+
+        startRoom7Countdown();
+
+        setTimeout(() => {
+            showFakeAd();
+        }, 3000);
+
+    }
+}
 /* ------------------- ROOM 3 PUZZLE ------------------- */
 const game = document.getElementById("game");
 const blocks = document.querySelectorAll(".block");
@@ -790,8 +821,93 @@ function checkRoom6(){
         alert("Wrong code...");
     }
 }
+    let room7TimerInterval;
+let room7TimeLeft = 60; // 1 minute countdown
+
+function startRoom7Countdown() {
+    const countdownDisplay = document.getElementById("room7Countdown");
+    room7TimeLeft = 60; // reset to 1 minute
+
+    // Clear any previous interval
+    clearInterval(room7TimerInterval);
+
+    room7TimerInterval = setInterval(() => {
+        let minutes = Math.floor(room7TimeLeft / 60);
+        let seconds = room7TimeLeft % 60;
+
+        countdownDisplay.textContent =
+            (minutes < 10 ? "0" : "") + minutes + ":" +
+            (seconds < 10 ? "0" : "") + seconds;
+
+        if (room7TimeLeft <= 0) {
+            clearInterval(room7TimerInterval);
+            countdownDisplay.textContent = "TIME'S UP!";
+            alert("The final countdown ended! Hurry!");
+            // Optionally, you could auto-finish or add a penalty here
+        }
+
+        room7TimeLeft--;
+    }, 1000);
+}
+
+// Start countdown when entering Room 7
+const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+        if (mutation.target.id === "room7" && !mutation.target.classList.contains("hidden")) {
+            startRoom7Countdown();
+        }
+    });
+});
+
+// Observe changes to Room 7 visibility
+observer.observe(document.getElementById("room7"), { attributes: true, attributeFilter: ["class"] });
+
+    function showFakeAd() {
+
+    const ad = document.getElementById("fakeAd");
+    const adTimerText = document.getElementById("adTimer");
+
+    ad.style.display = "flex";
+
+    let timeLeft = 3;
+
+    const adInterval = setInterval(() => {
+        timeLeft--;
+        adTimerText.textContent = timeLeft;
+
+        if (timeLeft <= 0) {
+            clearInterval(adInterval);
+            ad.style.display = "none";
+        }
+    }, 1000);
+}
+    
 </script>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
