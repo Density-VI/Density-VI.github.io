@@ -403,7 +403,7 @@ updateBalanceDisplay();
     z-index:9999;
 ">
     <p>🚨 WAIT! Special Offer!</p>
-    <p>Skip ad in <span id="adTimer">3</span>...</p>
+    <p>Skip ad in <span id="adTimer">15</span>...</p>
 </div>
 
 <!-- FINISH PAGE -->
@@ -411,7 +411,6 @@ updateBalanceDisplay();
     <h1>YOU ESCAPED</h1>
     <h2 id="finalTime"></h2>
     <button onclick="submitScore()">Submit Score</button>
-    goToRoom("leaderboardPage");
     <p id="submitStatus"></p>
 </div>
 
@@ -842,7 +841,8 @@ function startRoom7Countdown() {
         if (room7TimeLeft <= 0) {
             clearInterval(room7TimerInterval);
             countdownDisplay.textContent = "TIME'S UP!";
-            alert("The final countdown ended! Hurry!");
+            alert("The final countdown ended! you lost room 7 ur luckey we made a checkpoint in room 1");
+            goToRoom("room1")
             // Optionally, you could auto-finish or add a penalty here
         }
 
@@ -869,7 +869,7 @@ observer.observe(document.getElementById("room7"), { attributes: true, attribute
 
     ad.style.display = "flex";
 
-    let timeLeft = 3;
+    let timeLeft = 15;
 
     const adInterval = setInterval(() => {
         timeLeft--;
@@ -886,7 +886,6 @@ observer.observe(document.getElementById("room7"), { attributes: true, attribute
 
 </body>
 </html>
-
 
 
 
