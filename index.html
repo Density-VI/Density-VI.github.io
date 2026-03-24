@@ -377,41 +377,28 @@ updateBalanceDisplay();
     <button onclick="checkRoom6()">Submit</button>
 </div>
     <!-- room 7 -->
-<!-- ROOM 7 – FINAL BOSS -->
 <div id="room7" class="room hidden">
-    <h1>Room 7 – Final Challenge!</h1>
-    <p>Watch carefully and escape before time runs out...</p>
+    <h1>Room 7 – Final Challenge</h1>
+    <p>Good luck! You'll need it.</p>
+    <p>Time to escape this final step!</p>
 
-    <!-- Countdown Timer -->
+    <!-- Countdown -->
     <div id="room7Countdown" style="font-size:40px; color:yellow;">01:00</div>
 
-    <!-- Video Clue -->
-    <video id="room7Video" width="640" height="360" controls>
-        <source src="your-mission-impossible.mp4" type="video/mp4">
+    <!-- Mission Impossible video clue -->
+    <video id="missionVideo" width="640" height="360" controls autoplay loop style="margin:20px 0; border:3px solid white;">
+        <source src="mission-impossible.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
-    <p>Hint: Watch the video closely for the code.</p>
 
-    <!-- Fake Ad -->
-    <div id="fakeAd" style="
-        display:none;
-        position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        background:black;
-        color:white;
-        font-size:30px;
-        justify-content:center;
-        align-items:center;
-        flex-direction:column;
-        z-index:9999;
-    ">
-        <p>🚨 WAIT! Special Offer!</p>
-        <p>Skip ad in <span id="adTimer">15</span>...</p>
-        <button onclick="fakeSkip()">Skip Ad</button>
-    </div>
+    <!-- Mini puzzle for extra challenge -->
+    <p>Solve the puzzle before time runs out!</p>
+    <input type="text" id="room7PuzzleInput" placeholder="Enter secret code">
+    <button onclick="checkRoom7Puzzle()">Submit</button>
+    <p id="room7PuzzleMessage" style="color:red;"></p>
+
+    <button onclick="finishGame()">🏁 Finish Game</button>
+</div>
 
     <!-- Hidden Code Input -->
     <input id="room7Code" placeholder="Enter final code">
@@ -832,6 +819,7 @@ function checkRoom6(){
         alert("Wrong code...");
     }
 }
+    //room 7
     let room7TimerInterval;
 let room7TimeLeft = 60; // 1 minute countdown
 
