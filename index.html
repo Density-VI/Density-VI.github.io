@@ -377,44 +377,45 @@ updateBalanceDisplay();
     <button onclick="checkRoom6()">Submit</button>
 </div>
     <!-- room 7 -->
+<!-- ROOM 7 – FINAL BOSS -->
 <div id="room7" class="room hidden">
-    <h1>Room 7</h1>
-    <p>Good luck youll need it!.</p>
+    <h1>Room 7 – Final Challenge!</h1>
+    <p>Watch carefully and escape before time runs out...</p>
 
-    <p>Time to escape this final step!</p>
+    <!-- Countdown Timer -->
     <div id="room7Countdown" style="font-size:40px; color:yellow;">01:00</div>
 
-    <!-- 🎥 VIDEO EMBED -->
-    <iframe width="560" height="315"
-        src="https://www.youtube.com/embed/Dwnui-3-o-4"
-        title="YouTube video"
-        frameborder="0"
-        allow="autoplay; encrypted-media"
-        allowfullscreen>
-    </iframe>
+    <!-- Video Clue -->
+    <video id="room7Video" width="640" height="360" controls>
+        <source src="your-mission-impossible.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+    </video>
+    <p>Hint: Watch the video closely for the code.</p>
 
-    <br><br>
-
-    <button onclick="finishGame()">🏁 Finish Game</button>
-</div>
-    
+    <!-- Fake Ad -->
     <div id="fakeAd" style="
-    display:none;
-    position:fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    background:black;
-    color:white;
-    font-size:30px;
-    justify-content:center;
-    align-items:center;
-    flex-direction:column;
-    z-index:9999;
-">
-    <p>🚨 WAIT! Special Offer!</p>
-    <p>Skip ad in <span id="adTimer">15</span>...</p>
+        display:none;
+        position:fixed;
+        top:0;
+        left:0;
+        width:100%;
+        height:100%;
+        background:black;
+        color:white;
+        font-size:30px;
+        justify-content:center;
+        align-items:center;
+        flex-direction:column;
+        z-index:9999;
+    ">
+        <p>🚨 WAIT! Special Offer!</p>
+        <p>Skip ad in <span id="adTimer">15</span>...</p>
+        <button onclick="fakeSkip()">Skip Ad</button>
+    </div>
+
+    <!-- Hidden Code Input -->
+    <input id="room7Code" placeholder="Enter final code">
+    <button onclick="checkRoom7()">Submit</button>
 </div>
 
 <!-- FINISH PAGE -->
