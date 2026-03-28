@@ -78,7 +78,7 @@ th { background-color: #333; }
 #game{
     width:900px;
     height:500px;
-    border:3px solid gray;
+    border:3px dark gray;
     margin:auto;
     position:relative;
 }
@@ -86,7 +86,7 @@ th { background-color: #333; }
 .target{
     width:80px;
     height:80px;
-    border:4px dashed yellow;
+    border:4px dark gray;
     position:absolute;
     border-radius:10px;
 }
@@ -106,6 +106,21 @@ th { background-color: #333; }
     font-size:18px;
     display:none;
     cursor:pointer;
+}
+  #dialNumbers{
+    width:100%;
+    height:100%;
+    position:absolute;
+    transition: transform 0.2s ease-out;
+}
+
+.number{
+    position:absolute;
+    left:50%;
+    top:50%;
+    transform-origin: 0 -100px;
+    font-size:20px;
+    color:white;
 }
 </style>
 </head>
@@ -216,8 +231,6 @@ th { background-color: #333; }
 
 <!-- ROOM 4 -->
     <div id="room4" class="room hidden">
-    <meta charset="UTF-8">
-<title>Simple Slot Machine</title>
 
 <style>
 body{
@@ -269,10 +282,7 @@ button:hover{
   margin-top:20px;
 }
 </style>
-
-</head>
-
-<body>
+        
     <h>Back to gambling I see...</h>
 
     <div class="slot-machine">
@@ -285,7 +295,7 @@ button:hover{
     <p id="result"></p>
 
     <h3>Balance: $<span id="balanceDisplay">1000</span></h3>
-    <button onclick="startRoom5()">Enter Next Room</button>
+    <button onclick="startRoom5()">Enter Final Room</button>
 
 <script>
 let balance = 1000; // Starting money
@@ -348,7 +358,7 @@ updateBalanceDisplay();
 
 <!-- ROOM 5 – FINAL BOSS -->
 <div id="room5" class="room hidden">
-    <h1>Lets have a recap!</h1>
+    <h1>FINAL ROOM!</h1>
     <p id="bossMessage">The final door does not open for the impatient.</p>
 
     <div id="bossPhase2" class="hidden">
@@ -378,33 +388,49 @@ updateBalanceDisplay();
 </div>
     <!-- room 7 -->
 <div id="room7" class="room hidden">
-    <h1>Room 7 – Final Challenge</h1>
-    <p>Good luck! You'll need it.</p>
-    <p>Time to escape this final step!</p>
+    <h1>Room 7 – The Vault</h1>
+    <p>Good luck, you'll need it!</p>
 
-    <!-- Countdown -->
     <div id="room7Countdown" style="font-size:40px; color:yellow;">01:00</div>
 
-    <!-- Mission Impossible video clue -->
-    <video id="missionVideo" width="640" height="360" controls autoplay loop style="margin:20px 0; border:3px solid white;">
-        <source src="mission-impossible.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-    </video>
+    <div id="vaultContainer" style="margin-top:30px;">
 
-    <!-- Mini puzzle for extra challenge -->
-    <p>Solve the puzzle before time runs out!</p>
-    <input type="text" id="room7PuzzleInput" placeholder="Enter secret code">
-    <button onclick="checkRoom7Puzzle()">Submit</button>
-    <p id="room7PuzzleMessage" style="color:red;"></p>
+        <div id="dial" style="
+            width:240px;
+            height:240px;
+            border:8px solid gold;
+            border-radius:50%;
+            margin:auto;
+            position:relative;
+            background:#222;
+            overflow:hidden;
+        ">
 
-    <button onclick="finishGame()">🏁 Finish Game</button>
+            <!-- Rotating numbers -->
+            <div id="dialNumbers"></div>
+
+            <!-- Pointer -->
+            <div id="dialPointer" style="
+                width:4px;
+                height:110px;
+                background:red;
+                position:absolute;
+                top:10px;
+                left:50%;
+                transform:translateX(-50%);
+                transform-origin: bottom center;
+                z-index:2;
+            "></div>
+
+        </div>
+
+        <p>Selected Number: <span id="currentNumber">1</span></p>
+        <p>Current sequence: <span id="vaultInputDisplay">---</span></p>
+
+        <button id="lockNumberBtn">Lock Number</button>
+    </div>
 </div>
-
-    <!-- Hidden Code Input -->
-    <input id="room7Code" placeholder="Enter final code">
-    <button onclick="checkRoom7()">Submit</button>
-</div>
-
+    
 <!-- FINISH PAGE -->
 <div id="finishPage" class="room hidden">
     <h1>YOU ESCAPED</h1>
@@ -522,14 +548,18 @@ function goToRoom(nextRoomId) {
 
     clearTimeout(inactivityTimer);
 
+    // Hide all rooms
     document.querySelectorAll(".room").forEach(r => r.classList.add("hidden"));
+
+    // Show selected room
     document.getElementById(nextRoomId).classList.remove("hidden");
 
+    // ROOM 3 SETUP
     if(nextRoomId === "room3"){
         enterRoom3();
     }
 
-    // ✅ ROOM 7 LOGIC
+    // ✅ ROOM 7 FULL SETUP (COUNTDOWN + AD + VAULT)
     if(nextRoomId === "room7"){
 
         startRoom7Countdown();
@@ -538,6 +568,7 @@ function goToRoom(nextRoomId) {
             showFakeAd();
         }, 3000);
 
+        initVault(); // 👈 THIS FIXES YOUR VAULT ISSUE
     }
 }
 /* ------------------- ROOM 3 PUZZLE ------------------- */
@@ -819,7 +850,6 @@ function checkRoom6(){
         alert("Wrong code...");
     }
 }
-    //room 7
     let room7TimerInterval;
 let room7TimeLeft = 60; // 1 minute countdown
 
@@ -859,147 +889,76 @@ const observer = new MutationObserver((mutations) => {
     });
 });
 
-// Observe changes to Room 7 visibility
-observer.observe(document.getElementById("room7"), { attributes: true, attributeFilter: ["class"] });
+let vaultInitialized = false;
 
-    function showFakeAd() {
+function initVault(){
 
-    const ad = document.getElementById("fakeAd");
-    const adTimerText = document.getElementById("adTimer");
+    if(vaultInitialized) return;
+    vaultInitialized = true;
 
-    ad.style.display = "flex";
+    let vaultCombination = [1,6,2,7,3,4,9,6,2];
+    let currentVaultInput = [];
 
-    let timeLeft = 15;
+    let currentNumber = 1;
+    let angle = 0;
 
-    const adInterval = setInterval(() => {
-        timeLeft--;
-        adTimerText.textContent = timeLeft;
+    const dialNumbers = document.getElementById("dialNumbers");
+    const display = document.getElementById("vaultInputDisplay");
+    const currentNumDisplay = document.getElementById("currentNumber");
+    const lockBtn = document.getElementById("lockNumberBtn");
 
-        if (timeLeft <= 0) {
-            clearInterval(adInterval);
-            ad.style.display = "none";
+    // CREATE NUMBERS IN CIRCLE
+    for(let i=1;i<=9;i++){
+        let num = document.createElement("div");
+        num.className = "number";
+        num.innerText = i;
+
+        let deg = (i-1)*(360/9);
+        num.style.transform = `rotate(${deg}deg) translateY(-100px) rotate(-${deg}deg)`;
+
+        dialNumbers.appendChild(num);
+    }
+
+    document.getElementById("dial").addEventListener("wheel", (e)=>{
+        e.preventDefault();
+
+        if(e.deltaY > 0){
+            currentNumber++;
+        } else {
+            currentNumber--;
         }
-    }, 1000);
+
+        if(currentNumber > 9) currentNumber = 1;
+        if(currentNumber < 1) currentNumber = 9;
+
+        angle = -(currentNumber-1)*(360/9);
+        dialNumbers.style.transform = `rotate(${angle}deg)`;
+
+        currentNumDisplay.textContent = currentNumber;
+    });
+
+    lockBtn.addEventListener("click", ()=>{
+
+        if(currentVaultInput.length >= vaultCombination.length) return;
+
+        currentVaultInput.push(currentNumber);
+        display.textContent = currentVaultInput.join("");
+
+        if(currentVaultInput.length === vaultCombination.length){
+
+            if(currentVaultInput.join("") === vaultCombination.join("")){
+                alert("Vault unlocked!");
+                finishGame();
+            } else {
+                alert("Wrong combination!");
+                currentVaultInput = [];
+                display.textContent = "---";
+            }
+        }
+    });
 }
     
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
