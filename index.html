@@ -896,32 +896,41 @@ function initVault(){
 }
 
 // ===== ROOM SEQUENCE PUZZLE (hidden) =====
-function room7RoomClick(roomNum){
+function room7RoomClick(roomNum) {
     clearTimeout(room7SequenceTimeout);
     room7Sequence.push(roomNum);
 
-    // 1-second timeout: move player to last clicked room
-    room7SequenceTimeout = setTimeout(()=>{
-        goToRoom("room"+roomNum);
+    // 1 second delay before moving rooms (your existing mechanic)
+    room7SequenceTimeout = setTimeout(() => {
+        goToRoom("room" + roomNum);
         room7Sequence = [];
     }, 1000);
 
-    // check sequence
-    for(let i=0;i<room7Sequence.length;i++){
-        if(room7Sequence[i] !== room7Code[i]){
+    // check if wrong
+    for (let i = 0; i < room7Sequence.length; i++) {
+        if (room7Sequence[i] !== room7Code[i]) {
             room7Sequence = [];
-            goToRoom("room1"); // silently reset
+            goToRoom("room1");
             return;
         }
     }
 
-    // completed sequence
-    if(room7Sequence.length === room7Code.length){
+    // ✅ correct sequence (1-2-3-4)
+    if (room7Sequence.length === room7Code.length) {
+
         room7Sequence = [];
-        finishGame();
+
+        clearTimeout(room7SequenceTimeout);
+        clearInterval(room7TimerInterval);
+
+        // show finish page after 3 seconds
+        setTimeout(() => {
+            finishGame();
+        }, 3000);
+
+        return;
     }
 }
-
 // attach click events to buttons
 document.querySelectorAll("#room7 .room-button").forEach(btn=>{
     btn.addEventListener("click", ()=>{
